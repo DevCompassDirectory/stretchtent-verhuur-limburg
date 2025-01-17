@@ -67,7 +67,7 @@ const Stretchtenten = () => {
   return (
     <div className="pt-24 pb-20">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 fade-in">
           <h1 className="text-4xl font-bold mb-4">Onze Stretchtenten</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Ontdek ons assortiment premium stretchtenten, perfect voor elk type evenement
