@@ -25,7 +25,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 interface PageFormProps {
-  initialData?: FormValues;
+  initialData?: FormValues & { id: string };
   onSuccess?: () => void;
 }
 
@@ -44,12 +44,16 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const operation = initialData 
-        ? supabase.from("pages").update(values).eq("id", initialData.id)
-        : supabase.from("pages").insert(values);
-
-      const { error } = await operation;
-      if (error) throw error;
+      if (initialData?.id) {
+        const { error } = await supabase
+          .from("pages")
+          .update(values)
+          .eq("id", initialData.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("pages").insert(values);
+        if (error) throw error;
+      }
 
       toast({
         title: "Success",
