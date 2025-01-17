@@ -2,6 +2,26 @@ import { TentCard } from "@/components/TentCard";
 
 const tents = [
   {
+    id: "extra-small",
+    name: "Compact Mini Stretchtent",
+    size: "7,5 x 10m",
+    capacity: "Tot 50 personen",
+    description: "Ideaal voor kleine bijeenkomsten en intieme feesten in de tuin.",
+    features: [
+      "Ultra-compact design",
+      "Snelle opzettijd",
+      "Flexibele configuratie",
+      "Perfect voor tuinfeesten"
+    ],
+    image: "/photo-1482938289607-e9573fc25ebb",
+    specifications: {
+      width: "7,5 meter",
+      length: "10 meter",
+      height: "4 meter",
+      area: "75m²"
+    }
+  },
+  {
     id: "small",
     name: "Compact Stretchtent",
     size: "10 x 15m",
@@ -60,6 +80,27 @@ const tents = [
       height: "6 meter",
       area: "600m²"
     }
+  },
+  {
+    id: "custom",
+    name: "Custom Stretchtent",
+    size: "Op maat",
+    capacity: "Flexibel",
+    description: "Een volledig op maat gemaakte stretchtent, aangepast aan uw specifieke wensen en locatie.",
+    features: [
+      "Volledig maatwerk",
+      "Flexibele afmetingen",
+      "Aangepaste configuratie",
+      "Professioneel advies"
+    ],
+    image: "/photo-1469474968028-56623f02e42e",
+    specifications: {
+      width: "Op maat",
+      length: "Op maat",
+      height: "Op maat",
+      area: "Op maat"
+    },
+    isCustomConfig: true
   }
 ];
 

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Tent } from "@/types/tent";
 
@@ -36,12 +36,21 @@ export const TentCard = ({ tent }: TentCardProps) => {
               </p>
             </div>
           </div>
-          <Button variant="outline" className="mt-6" asChild>
-            <Link to={`/stretchtenten/${tent.id}`} className="flex items-center justify-center gap-2">
-              Bekijk Details
-              <ArrowRight size={16} />
-            </Link>
-          </Button>
+          {tent.isCustomConfig ? (
+            <Button className="mt-6" asChild>
+              <Link to="/contact" className="flex items-center justify-center gap-2">
+                <MessageSquare size={16} />
+                Vraag Advies
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="outline" className="mt-6" asChild>
+              <Link to={`/stretchtenten/${tent.id}`} className="flex items-center justify-center gap-2">
+                Bekijk Details
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </Card>

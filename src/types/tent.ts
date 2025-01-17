@@ -12,4 +12,5 @@ export interface Tent {
     height: string;
     area: string;
   };
+  isCustomConfig?: boolean;
 }
