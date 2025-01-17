@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ interface PageFormProps {
 export function PageForm({ initialData, onSuccess }: PageFormProps) {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -69,6 +71,9 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
           });
         if (error) throw error;
       }
+
+      // Invalidate the pages query to refresh the list
+      queryClient.invalidateQueries({ queryKey: ["pages"] });
 
       toast({
         title: "Success",
