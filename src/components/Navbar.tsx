@@ -29,6 +29,9 @@ export const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
+            <Link to="/dashboard" className="hover:text-primary/80 transition-colors">
+              Dashboard
+            </Link>
             <Link to="/" className="hover:text-primary/80 transition-colors">
               Home
             </Link>
@@ -58,6 +61,13 @@ export const Navbar = () => {
         {isOpen && (
           <div className="md:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-md shadow-lg animate-fade-down">
             <div className="px-4 py-4 space-y-4">
+              <Link
+                to="/dashboard"
+                className="block hover:text-primary/80 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Dashboard
+              </Link>
               <Link
                 to="/"
                 className="block hover:text-primary/80 transition-colors"

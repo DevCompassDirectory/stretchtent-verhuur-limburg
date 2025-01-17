@@ -21,7 +21,7 @@ const Auth = () => {
           .single();
 
         if (profile?.is_admin) {
-          navigate("/");
+          navigate("/dashboard");
         }
       }
     });

@@ -15,6 +15,7 @@ import Terms from "./pages/Terms";
 import Stretchtenten from "./pages/Stretchtenten";
 import TentDetail from "./pages/TentDetail";
 import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,15 @@ const App = () => (
           <Navbar />
           <main className="flex-grow">
             <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
               <Route 
                 path="/" 
                 element={
@@ -87,7 +97,6 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              <Route path="/auth" element={<Auth />} />
               <Route 
                 path="/projects" 
                 element={
