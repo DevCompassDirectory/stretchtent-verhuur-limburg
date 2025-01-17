@@ -6,7 +6,7 @@ interface ProtectedRouteProps {
   requireAdmin?: boolean;
 }
 
-export const ProtectedRoute = ({ children, requireAdmin = true }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
   const { session, isLoading, isAdmin } = useAuth();
   const location = useLocation();
 
@@ -19,7 +19,7 @@ export const ProtectedRoute = ({ children, requireAdmin = true }: ProtectedRoute
   }
 
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
