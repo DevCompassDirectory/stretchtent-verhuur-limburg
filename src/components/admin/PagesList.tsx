@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -93,7 +94,12 @@ export function PagesList() {
           <Card key={page.id} className="p-4">
             <div className="flex justify-between items-center">
               <div>
-                <h3 className="font-semibold">{page.title}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold">{page.title}</h3>
+                  <Badge variant={page.is_published ? "default" : "secondary"}>
+                    {page.is_published ? "Published" : "Draft"}
+                  </Badge>
+                </div>
                 <p className="text-sm text-muted-foreground">/{page.slug}</p>
               </div>
               <div className="flex items-center gap-2">
