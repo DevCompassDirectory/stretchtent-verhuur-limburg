@@ -11,6 +11,45 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 
+const NavLink = ({ to, children, onClick }: { to: string; children: React.ReactNode; onClick?: () => void }) => (
+  <Link
+    to={to}
+    className="hover:text-primary/80 transition-colors"
+    onClick={onClick}
+  >
+    {children}
+  </Link>
+);
+
+const UserAvatar = () => (
+  <Avatar className="h-8 w-8">
+    <AvatarFallback>
+      <User className="h-4 w-4" />
+    </AvatarFallback>
+  </Avatar>
+);
+
+const UserMenu = ({ signOut, onClose }: { signOut: () => void; onClose?: () => void }) => (
+  <>
+    <Link
+      to="/dashboard"
+      className="block hover:text-primary/80 transition-colors"
+      onClick={onClose}
+    >
+      Dashboard
+    </Link>
+    <Button 
+      className="w-full"
+      onClick={() => {
+        signOut();
+        onClose?.();
+      }}
+    >
+      Sign Out
+    </Button>
+  </>
+);
+
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,27 +77,15 @@ export const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="hover:text-primary/80 transition-colors">
-              Home
-            </Link>
-            <Link to="/stretchtenten" className="hover:text-primary/80 transition-colors">
-              Stretchtenten
-            </Link>
-            <Link to="/projects" className="hover:text-primary/80 transition-colors">
-              Projecten
-            </Link>
-            <Link to="/contact" className="hover:text-primary/80 transition-colors">
-              Contact
-            </Link>
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/stretchtenten">Stretchtenten</NavLink>
+            <NavLink to="/projects">Projecten</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
             {session && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback>
-                        <User className="h-4 w-4" />
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -87,53 +114,12 @@ export const Navbar = () => {
         {isOpen && (
           <div className="md:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-md shadow-lg animate-fade-down">
             <div className="px-4 py-4 space-y-4">
-              <Link
-                to="/"
-                className="block hover:text-primary/80 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                to="/stretchtenten"
-                className="block hover:text-primary/80 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Stretchtenten
-              </Link>
-              <Link
-                to="/projects"
-                className="block hover:text-primary/80 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Projecten
-              </Link>
-              <Link
-                to="/contact"
-                className="block hover:text-primary/80 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Contact
-              </Link>
+              <NavLink to="/" onClick={() => setIsOpen(false)}>Home</NavLink>
+              <NavLink to="/stretchtenten" onClick={() => setIsOpen(false)}>Stretchtenten</NavLink>
+              <NavLink to="/projects" onClick={() => setIsOpen(false)}>Projecten</NavLink>
+              <NavLink to="/contact" onClick={() => setIsOpen(false)}>Contact</NavLink>
               {session && (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className="block hover:text-primary/80 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                  <Button 
-                    className="w-full"
-                    onClick={() => {
-                      signOut();
-                      setIsOpen(false);
-                    }}
-                  >
-                    Sign Out
-                  </Button>
-                </>
+                <UserMenu signOut={signOut} onClose={() => setIsOpen(false)} />
               )}
             </div>
           </div>
