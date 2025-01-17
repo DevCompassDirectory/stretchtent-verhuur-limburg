@@ -16,14 +16,17 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 
+// Define the schema to match Supabase's requirements
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   slug: z.string().min(1, "Slug is required"),
   is_published: z.boolean().default(false),
 });
 
+// Infer the type from the schema
 type FormValues = z.infer<typeof formSchema>;
 
+// Define the props type with the correct initialData shape
 interface PageFormProps {
   initialData?: FormValues & { id: string };
   onSuccess?: () => void;
@@ -45,13 +48,25 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
   const onSubmit = async (values: FormValues) => {
     try {
       if (initialData?.id) {
+        // Update existing page
         const { error } = await supabase
           .from("pages")
-          .update(values)
+          .update({
+            title: values.title,
+            slug: values.slug,
+            is_published: values.is_published,
+          })
           .eq("id", initialData.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("pages").insert(values);
+        // Create new page
+        const { error } = await supabase
+          .from("pages")
+          .insert({
+            title: values.title,
+            slug: values.slug,
+            is_published: values.is_published,
+          });
         if (error) throw error;
       }
 
