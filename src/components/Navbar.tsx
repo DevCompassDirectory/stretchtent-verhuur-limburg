@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,47 +8,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
-
-const NavLink = ({ to, children, onClick }: { to: string; children: React.ReactNode; onClick?: () => void }) => (
-  <Link
-    to={to}
-    className="hover:text-primary/80 transition-colors"
-    onClick={onClick}
-  >
-    {children}
-  </Link>
-);
-
-const UserAvatar = () => (
-  <Avatar className="h-8 w-8">
-    <AvatarFallback>
-      <User className="h-4 w-4" />
-    </AvatarFallback>
-  </Avatar>
-);
-
-const UserMenu = ({ signOut, onClose }: { signOut: () => void; onClose?: () => void }) => (
-  <>
-    <Link
-      to="/dashboard"
-      className="block hover:text-primary/80 transition-colors"
-      onClick={onClose}
-    >
-      Dashboard
-    </Link>
-    <Button 
-      className="w-full"
-      onClick={() => {
-        signOut();
-        onClose?.();
-      }}
-    >
-      Sign Out
-    </Button>
-  </>
-);
+import { NavLink } from "./nav/NavLink";
+import { UserAvatar } from "./nav/UserAvatar";
+import { MobileNav } from "./nav/MobileNav";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -111,19 +74,13 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile Navigation Menu */}
-        {isOpen && (
-          <div className="md:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-md shadow-lg animate-fade-down">
-            <div className="px-4 py-4 space-y-4">
-              <NavLink to="/" onClick={() => setIsOpen(false)}>Home</NavLink>
-              <NavLink to="/stretchtenten" onClick={() => setIsOpen(false)}>Stretchtenten</NavLink>
-              <NavLink to="/projects" onClick={() => setIsOpen(false)}>Projecten</NavLink>
-              <NavLink to="/contact" onClick={() => setIsOpen(false)}>Contact</NavLink>
-              {session && isAdmin && (
-                <UserMenu signOut={signOut} onClose={() => setIsOpen(false)} />
-              )}
-            </div>
-          </div>
-        )}
+        <MobileNav
+          isOpen={isOpen}
+          session={!!session}
+          isAdmin={isAdmin}
+          signOut={signOut}
+          onClose={() => setIsOpen(false)}
+        />
       </div>
     </nav>
   );
