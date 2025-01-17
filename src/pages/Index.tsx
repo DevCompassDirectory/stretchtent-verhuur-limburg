@@ -1,35 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProjectCard } from "@/components/ProjectCard";
 
 const Home = () => {
-  const featuredProjects = [
-    {
-      id: "1",
-      title: "Bruiloft in Kasteel Hoensbroek",
-      description: "Een elegante stretchtent setup voor een intieme bruiloft in de tuinen van Kasteel Hoensbroek.",
-      image: "/photo-1482938289607-e9573fc25ebb",
-      date: "15 Juni 2023",
-      category: "Bruiloft"
-    },
-    {
-      id: "2",
-      title: "Bedrijfsevenement Maastricht",
-      description: "Grote stretchtent configuratie voor een corporate event met meer dan 200 gasten.",
-      image: "/photo-1509316975850-ff9c5deb0cd9",
-      date: "22 Juli 2023",
-      category: "Zakelijk"
-    },
-    {
-      id: "3",
-      title: "Tuinfeest in Valkenburg",
-      description: "Gezellige stretchtent opstelling voor een privé tuinfeest met live muziek.",
-      image: "/photo-1513836279014-a89f7a76ae86",
-      date: "8 Augustus 2023",
-      category: "Feest"
-    }
-  ];
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -109,9 +81,57 @@ const Home = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project) => (
-              <ProjectCard key={project.id} {...project} />
-            ))}
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+              <img
+                src="/photo-1482938289607-e9573fc25ebb"
+                alt="Bruiloft in Kasteel Hoensbroek"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Bruiloft in Kasteel Hoensbroek</h3>
+                <p className="text-muted-foreground">
+                  Een elegante stretchtent setup voor een intieme bruiloft in de tuinen van Kasteel Hoensbroek.
+                </p>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">15 Juni 2023</span>
+                  <span className="text-sm font-medium">Bruiloft</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+              <img
+                src="/photo-1509316975850-ff9c5deb0cd9"
+                alt="Bedrijfsevenement Maastricht"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Bedrijfsevenement Maastricht</h3>
+                <p className="text-muted-foreground">
+                  Grote stretchtent configuratie voor een corporate event met meer dan 200 gasten.
+                </p>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">22 Juli 2023</span>
+                  <span className="text-sm font-medium">Zakelijk</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+              <img
+                src="/photo-1513836279014-a89f7a76ae86"
+                alt="Tuinfeest in Valkenburg"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">Tuinfeest in Valkenburg</h3>
+                <p className="text-muted-foreground">
+                  Gezellige stretchtent opstelling voor een privé tuinfeest met live muziek.
+                </p>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">8 Augustus 2023</span>
+                  <span className="text-sm font-medium">Feest</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="text-center mt-12">
             <Button size="lg" variant="outline" asChild>
