@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageForm } from "@/components/admin/PageForm";
+import { PageComponentsList } from "@/components/admin/PageComponentsList";
 
 export default function EditPage() {
   const { id } = useParams();
@@ -42,7 +43,10 @@ export default function EditPage() {
         <h1 className="text-2xl font-bold">Edit Page</h1>
         <p className="text-muted-foreground">Make changes to your page</p>
       </div>
-      <PageForm initialData={page} />
+      <div className="space-y-6">
+        <PageForm initialData={page} />
+        <PageComponentsList pageId={page.id} />
+      </div>
     </div>
   );
 }
