@@ -53,7 +53,7 @@ const UserMenu = ({ signOut, onClose }: { signOut: () => void; onClose?: () => v
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { session, signOut } = useAuth();
+  const { session, signOut, isAdmin } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,7 +81,7 @@ export const Navbar = () => {
             <NavLink to="/stretchtenten">Stretchtenten</NavLink>
             <NavLink to="/projects">Projecten</NavLink>
             <NavLink to="/contact">Contact</NavLink>
-            {session && (
+            {session && isAdmin && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -118,7 +118,7 @@ export const Navbar = () => {
               <NavLink to="/stretchtenten" onClick={() => setIsOpen(false)}>Stretchtenten</NavLink>
               <NavLink to="/projects" onClick={() => setIsOpen(false)}>Projecten</NavLink>
               <NavLink to="/contact" onClick={() => setIsOpen(false)}>Contact</NavLink>
-              {session && (
+              {session && isAdmin && (
                 <UserMenu signOut={signOut} onClose={() => setIsOpen(false)} />
               )}
             </div>
