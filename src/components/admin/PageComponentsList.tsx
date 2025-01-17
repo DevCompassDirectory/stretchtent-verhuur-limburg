@@ -34,6 +34,7 @@ export function PageComponentsList({ pageId }: PageComponentsListProps) {
       console.log("Fetched components:", data);
       return data as PageComponent[];
     },
+    enabled: !!pageId, // Only run query if pageId exists
   });
 
   const handleAddComponent = async (type: PageComponent["component_type"]) => {
@@ -84,7 +85,7 @@ export function PageComponentsList({ pageId }: PageComponentsListProps) {
       </div>
 
       <div className="space-y-4">
-        {components?.length === 0 ? (
+        {!components || components.length === 0 ? (
           <Card>
             <CardContent className="py-4">
               <p className="text-center text-muted-foreground">
@@ -93,7 +94,7 @@ export function PageComponentsList({ pageId }: PageComponentsListProps) {
             </CardContent>
           </Card>
         ) : (
-          components?.map((component) => (
+          components.map((component) => (
             <ComponentCard
               key={component.id}
               component={component}

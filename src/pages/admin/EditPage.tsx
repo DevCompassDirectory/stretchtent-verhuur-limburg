@@ -7,21 +7,26 @@ import { PageComponentsList } from "@/components/admin/PageComponentsList";
 export default function EditPage() {
   const { id } = useParams();
 
-  const { data: page, isLoading } = useQuery({
+  const { data: page, isLoading: pageLoading } = useQuery({
     queryKey: ["page", id],
     queryFn: async () => {
+      console.log("Fetching page with ID:", id);
       const { data, error } = await supabase
         .from("pages")
         .select("*")
         .eq("id", id)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching page:", error);
+        throw error;
+      }
+      console.log("Fetched page:", data);
       return data;
     },
   });
 
-  if (isLoading) {
+  if (pageLoading) {
     return (
       <div className="container max-w-2xl py-6">
         <div className="h-20 animate-pulse bg-muted rounded-lg" />
