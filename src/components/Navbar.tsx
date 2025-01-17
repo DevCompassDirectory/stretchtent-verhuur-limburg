@@ -32,6 +32,9 @@ export const Navbar = () => {
             <Link to="/" className="hover:text-primary/80 transition-colors">
               Home
             </Link>
+            <Link to="/stretchtenten" className="hover:text-primary/80 transition-colors">
+              Stretchtenten
+            </Link>
             <Link to="/projects" className="hover:text-primary/80 transition-colors">
               Projecten
             </Link>
@@ -61,6 +64,13 @@ export const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Home
+              </Link>
+              <Link
+                to="/stretchtenten"
+                className="block hover:text-primary/80 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Stretchtenten
               </Link>
               <Link
                 to="/projects"
