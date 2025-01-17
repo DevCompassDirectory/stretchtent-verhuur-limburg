@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 const Dashboard = () => {
   return (
     <SidebarProvider>
-      <div className="flex flex-1">
+      <div className="container mt-8 grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
         <AdminSidebar />
-        <main className="flex-1">
+        <main>
           <Outlet />
         </main>
       </div>
