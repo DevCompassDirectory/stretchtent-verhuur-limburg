@@ -22,7 +22,11 @@ const formSchema = z.object({
   is_published: z.boolean().default(false),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+  title: string;
+  slug: string;
+  is_published: boolean;
+};
 
 interface PageFormProps {
   initialData?: FormValues;
@@ -44,7 +48,9 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { error } = await supabase.from("pages").insert([values]);
+      const { error } = await supabase
+        .from("pages")
+        .insert(values);
 
       if (error) throw error;
 
