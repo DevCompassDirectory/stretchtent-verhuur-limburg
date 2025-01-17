@@ -8,11 +8,11 @@ const Home = () => {
       <section className="relative h-screen">
         <div className="absolute inset-0">
           <img
-            src="/photo-1518495973542-4542c06a5843"
-            alt="Stretchtent bij zonsondergang"
+            src="/lovable-uploads/3af388d3-afeb-4c98-9395-37692e3002e0.png"
+            alt="Elegante stretchtent bruiloft setup met witte decoratie"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/30" />
         </div>
         <div className="relative container mx-auto px-4 h-full flex items-center">
           <div className="max-w-2xl text-white space-y-6 animate-fade-up">
