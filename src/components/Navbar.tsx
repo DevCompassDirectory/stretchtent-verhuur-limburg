@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +46,10 @@ export const Navbar = () => {
             <Link to="/contact" className="hover:text-primary/80 transition-colors">
               Contact
             </Link>
-            <Button>Offerte Aanvragen</Button>
+            <Button onClick={() => signOut()}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
           </div>
 
           {/* Mobile Navigation Button */}
@@ -96,7 +101,16 @@ export const Navbar = () => {
               >
                 Contact
               </Link>
-              <Button className="w-full">Offerte Aanvragen</Button>
+              <Button 
+                className="w-full"
+                onClick={() => {
+                  signOut();
+                  setIsOpen(false);
+                }}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
             </div>
           </div>
         )}

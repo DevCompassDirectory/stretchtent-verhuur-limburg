@@ -1,33 +1,24 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Auth as SupabaseAuth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AuthError } from "@supabase/supabase-js";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { session, isAdmin } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "SIGNED_IN") {
-        // Check if user is admin
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("is_admin")
-          .eq("id", session?.user?.id)
-          .single();
-
-        if (profile?.is_admin) {
-          navigate("/dashboard");
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    if (session && isAdmin) {
+      const from = (location.state as any)?.from?.pathname || "/dashboard";
+      navigate(from);
+    }
+  }, [session, isAdmin, navigate, location]);
 
   const handleError = (error: AuthError) => {
     setErrorMessage(error.message);
@@ -37,8 +28,8 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-4">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">Welcome Back</h1>
-          <p className="text-muted-foreground">Sign in to access your account</p>
+          <h1 className="text-2xl font-bold">Admin Login</h1>
+          <p className="text-muted-foreground">Sign in to access the admin dashboard</p>
         </div>
         
         {errorMessage && (
@@ -63,6 +54,7 @@ const Auth = () => {
             }}
             providers={[]}
             redirectTo={window.location.origin}
+            onError={handleError}
           />
         </div>
       </div>
