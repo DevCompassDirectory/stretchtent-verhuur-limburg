@@ -18,6 +18,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Pages from "./pages/admin/Pages";
 import CreatePage from "./pages/admin/CreatePage";
+import EditPage from "./pages/admin/EditPage";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
                   <Route index element={<div className="container py-6">Welcome to Dashboard</div>} />
                   <Route path="pages" element={<Pages />} />
                   <Route path="pages/create" element={<CreatePage />} />
+                  <Route path="pages/:id/edit" element={<EditPage />} />
                 </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />

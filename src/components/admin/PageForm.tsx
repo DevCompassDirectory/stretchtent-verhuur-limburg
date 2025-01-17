@@ -22,7 +22,6 @@ const formSchema = z.object({
   is_published: z.boolean().default(false),
 });
 
-// Infer the type from the schema for better type safety
 type FormValues = z.infer<typeof formSchema>;
 
 interface PageFormProps {
@@ -45,19 +44,16 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { error } = await supabase
-        .from("pages")
-        .insert({
-          title: values.title,
-          slug: values.slug,
-          is_published: values.is_published,
-        });
+      const operation = initialData 
+        ? supabase.from("pages").update(values).eq("id", initialData.id)
+        : supabase.from("pages").insert(values);
 
+      const { error } = await operation;
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: "Page created successfully",
+        description: `Page ${initialData ? "updated" : "created"} successfully`,
       });
 
       if (onSuccess) {
@@ -66,11 +62,11 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
 
       navigate("/dashboard/pages");
     } catch (error) {
-      console.error("Error creating page:", error);
+      console.error("Error saving page:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to create page. Please try again.",
+        description: `Failed to ${initialData ? "update" : "create"} page. Please try again.`,
       });
     }
   };
@@ -124,7 +120,9 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
           )}
         />
 
-        <Button type="submit">Create Page</Button>
+        <Button type="submit">
+          {initialData ? "Update" : "Create"} Page
+        </Button>
       </form>
     </Form>
   );
