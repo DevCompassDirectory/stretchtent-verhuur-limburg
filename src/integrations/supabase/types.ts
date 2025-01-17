@@ -9,6 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      page_components: {
+        Row: {
+          component_type: Database["public"]["Enums"]["component_type"]
+          content: Json
+          created_at: string
+          id: string
+          order_index: number
+          page_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          component_type: Database["public"]["Enums"]["component_type"]
+          content: Json
+          created_at?: string
+          id?: string
+          order_index: number
+          page_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          component_type?: Database["public"]["Enums"]["component_type"]
+          content?: Json
+          created_at?: string
+          id?: string
+          order_index?: number
+          page_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_components_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       page_content: {
         Row: {
           content: Json
@@ -29,6 +67,77 @@ export type Database = {
           created_at?: string
           id?: string
           page_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      page_seo: {
+        Row: {
+          created_at: string
+          id: string
+          meta_description: string | null
+          meta_title: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          page_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_seo_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: true
+            referencedRelation: "pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pages: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean | null
+          slug?: string
+          title?: string
           updated_at?: string
         }
         Relationships: []
@@ -65,7 +174,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      component_type:
+        | "hero"
+        | "text"
+        | "image"
+        | "gallery"
+        | "cta"
+        | "features"
+        | "testimonials"
     }
     CompositeTypes: {
       [_ in never]: never
