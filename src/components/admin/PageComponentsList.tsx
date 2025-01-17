@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -20,6 +20,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PageComponent {
   id: string;
@@ -39,6 +40,7 @@ interface ComponentEditorProps {
 
 function ComponentEditor({ component, onClose }: ComponentEditorProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const form = useForm({
     defaultValues: {
       ...component.content,
@@ -58,6 +60,9 @@ function ComponentEditor({ component, onClose }: ComponentEditorProps) {
         title: "Success",
         description: "Component updated successfully",
       });
+      
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["page-components"] });
       onClose();
     } catch (error) {
       console.error("Error updating component:", error);
@@ -153,7 +158,6 @@ function ComponentEditor({ component, onClose }: ComponentEditorProps) {
             />
           </>
         );
-      // Add more cases for other component types
       default:
         return <p>Editor not implemented for this component type yet.</p>;
     }
@@ -178,18 +182,24 @@ function ComponentEditor({ component, onClose }: ComponentEditorProps) {
 
 export function PageComponentsList({ pageId }: PageComponentsListProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [editingComponent, setEditingComponent] = useState<PageComponent | null>(null);
   
   const { data: components, isLoading } = useQuery({
     queryKey: ["page-components", pageId],
     queryFn: async () => {
+      console.log("Fetching components for page:", pageId);
       const { data, error } = await supabase
         .from("page_components")
         .select("*")
         .eq("page_id", pageId)
         .order("order_index");
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching components:", error);
+        throw error;
+      }
+      console.log("Fetched components:", data);
       return data as PageComponent[];
     },
   });
@@ -197,17 +207,25 @@ export function PageComponentsList({ pageId }: PageComponentsListProps) {
   const handleAddComponent = async (type: PageComponent["component_type"]) => {
     try {
       const newOrderIndex = components ? components.length : 0;
+      const defaultContent = type === 'text' 
+        ? { title: '', content: '' }
+        : type === 'hero'
+        ? { heading: '', subheading: '', buttonText: '', buttonLink: '' }
+        : {};
       
       const { error } = await supabase
         .from("page_components")
         .insert({
           page_id: pageId,
           component_type: type,
-          content: {},
+          content: defaultContent,
           order_index: newOrderIndex,
         });
 
       if (error) throw error;
+
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["page-components"] });
 
       toast({
         title: "Success",
@@ -265,23 +283,47 @@ export function PageComponentsList({ pageId }: PageComponentsListProps) {
       </div>
 
       <div className="space-y-4">
-        {components?.map((component) => (
-          <div
-            key={component.id}
-            className="p-4 border rounded-lg bg-card"
-          >
-            <div className="flex justify-between items-center">
-              <span className="capitalize">{component.component_type}</span>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setEditingComponent(component)}
-              >
-                Edit
-              </Button>
-            </div>
-          </div>
-        ))}
+        {components?.length === 0 ? (
+          <Card>
+            <CardContent className="py-4">
+              <p className="text-center text-muted-foreground">No components added yet. Click "Add Component" to get started.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          components?.map((component) => (
+            <Card key={component.id}>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base capitalize">{component.component_type}</CardTitle>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setEditingComponent(component)}
+                  >
+                    Edit
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {component.component_type === "text" && (
+                  <div className="space-y-2">
+                    <p className="font-medium">{component.content.title}</p>
+                    <p className="text-muted-foreground">{component.content.content}</p>
+                  </div>
+                )}
+                {component.component_type === "hero" && (
+                  <div className="space-y-2">
+                    <p className="font-medium">{component.content.heading}</p>
+                    <p className="text-muted-foreground">{component.content.subheading}</p>
+                    {component.content.buttonText && (
+                      <p className="text-sm">Button: {component.content.buttonText}</p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
 
       {editingComponent && (
