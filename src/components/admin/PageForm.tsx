@@ -22,11 +22,8 @@ const formSchema = z.object({
   is_published: z.boolean().default(false),
 });
 
-type FormValues = {
-  title: string;
-  slug: string;
-  is_published: boolean;
-};
+// Infer the type from the schema for better type safety
+type FormValues = z.infer<typeof formSchema>;
 
 interface PageFormProps {
   initialData?: FormValues;
@@ -50,7 +47,11 @@ export function PageForm({ initialData, onSuccess }: PageFormProps) {
     try {
       const { error } = await supabase
         .from("pages")
-        .insert(values);
+        .insert({
+          title: values.title,
+          slug: values.slug,
+          is_published: values.is_published,
+        });
 
       if (error) throw error;
 
