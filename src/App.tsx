@@ -17,6 +17,7 @@ import TentDetail from "./pages/TentDetail";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Pages from "./pages/admin/Pages";
+import CreatePage from "./pages/admin/CreatePage";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
                 >
                   <Route index element={<div className="container py-6">Welcome to Dashboard</div>} />
                   <Route path="pages" element={<Pages />} />
+                  <Route path="pages/create" element={<CreatePage />} />
                 </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />

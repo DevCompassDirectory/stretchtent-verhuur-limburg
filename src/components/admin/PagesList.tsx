@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function PagesList() {
   const { data: pages, isLoading } = useQuery({
@@ -26,9 +27,11 @@ export function PagesList() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Pages</h2>
-        <Button>
-          <Plus className="mr-2" />
-          Create Page
+        <Button asChild>
+          <Link to="/dashboard/pages/create">
+            <Plus className="mr-2" />
+            Create Page
+          </Link>
         </Button>
       </div>
       <div className="grid gap-4">
@@ -40,11 +43,15 @@ export function PagesList() {
                 <p className="text-sm text-muted-foreground">/{page.slug}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  Edit
+                <Button variant="outline" size="sm" asChild>
+                  <Link to={`/dashboard/pages/${page.id}/edit`}>
+                    Edit
+                  </Link>
                 </Button>
-                <Button variant="ghost" size="sm">
-                  View
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to={`/${page.slug}`} target="_blank">
+                    View
+                  </Link>
                 </Button>
               </div>
             </div>
