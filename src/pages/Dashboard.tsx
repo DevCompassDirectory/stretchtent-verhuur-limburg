@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 const Dashboard = () => {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
+      <div className="flex flex-1">
         <AdminSidebar />
-        <main className="flex-1 pt-16">
+        <main className="flex-1">
           <Outlet />
         </main>
       </div>
