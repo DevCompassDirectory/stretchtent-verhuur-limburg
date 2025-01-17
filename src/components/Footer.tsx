@@ -49,7 +49,7 @@ export const Footer = () => {
               <Link to="/privacy" className="hover:text-primary/80 transition-colors">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="hover:text-primary/80 transition-colors">
+              <Link to="/algemene-voorwaarden" className="hover:text-primary/80 transition-colors">
                 Algemene Voorwaarden
               </Link>
             </div>
