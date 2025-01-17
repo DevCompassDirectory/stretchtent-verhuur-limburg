@@ -19,7 +19,7 @@ export const ProtectedRoute = ({ children, requireAdmin = true }: ProtectedRoute
   }
 
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

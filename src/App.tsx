@@ -39,62 +39,13 @@ const App = () => (
                     </ProtectedRoute>
                   } 
                 />
-                <Route 
-                  path="/" 
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <Home />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/projects" 
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <Projects />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/contact" 
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <Contact />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/privacy" 
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <Privacy />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/algemene-voorwaarden" 
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <Terms />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/stretchtenten" 
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <Stretchtenten />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/stretchtenten/:id" 
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <TentDetail />
-                    </ProtectedRoute>
-                  } 
-                />
+                <Route path="/" element={<Home />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/algemene-voorwaarden" element={<Terms />} />
+                <Route path="/stretchtenten" element={<Stretchtenten />} />
+                <Route path="/stretchtenten/:id" element={<TentDetail />} />
               </Routes>
             </main>
             <Footer />
