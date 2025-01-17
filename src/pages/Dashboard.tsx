@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 const Dashboard = () => {
   return (
     <SidebarProvider>
-      <div className="container mt-8 grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
+      <div className="container mt-20 grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
         <AdminSidebar />
         <main>
           <Outlet />
