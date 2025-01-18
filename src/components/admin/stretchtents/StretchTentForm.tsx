@@ -9,6 +9,7 @@ import { ImageSelector } from "@/components/admin/ImageSelector";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tent } from "@/types/tent";
+import { useEffect } from "react";
 
 interface StretchTentFormProps {
   tent: Tent | null;
@@ -41,7 +42,7 @@ export const StretchTentForm = ({
 }: StretchTentFormProps) => {
   const { toast } = useToast();
   const form = useForm<FormValues>({
-    defaultValues: tent || {
+    defaultValues: {
       name: "",
       slug: "",
       size: "",
@@ -57,6 +58,43 @@ export const StretchTentForm = ({
       is_custom_config: false,
     },
   });
+
+  // Reset form with tent data when editing
+  useEffect(() => {
+    if (tent) {
+      form.reset({
+        name: tent.name,
+        slug: tent.slug,
+        size: tent.size,
+        capacity: tent.capacity,
+        description: tent.description,
+        short_description: tent.short_description,
+        features: tent.features,
+        image: tent.image,
+        width: tent.width,
+        length: tent.length,
+        height: tent.height,
+        area: tent.area,
+        is_custom_config: tent.is_custom_config || false,
+      });
+    } else {
+      form.reset({
+        name: "",
+        slug: "",
+        size: "",
+        capacity: "",
+        description: "",
+        short_description: "",
+        features: [],
+        image: "",
+        width: "",
+        length: "",
+        height: "",
+        area: "",
+        is_custom_config: false,
+      });
+    }
+  }, [tent, form]);
 
   const onSubmit = async (data: FormValues) => {
     try {
