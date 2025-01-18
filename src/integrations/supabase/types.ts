@@ -9,6 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      home_page_content: {
+        Row: {
+          about_description: string
+          about_image: string
+          about_title: string
+          created_at: string
+          cta_description: string
+          cta_title: string
+          features_subtitle: string
+          features_title: string
+          hero_image: string
+          hero_subtitle: string
+          hero_title: string
+          id: string
+          meta_description: string
+          meta_title: string
+          og_description: string
+          og_image: string
+          og_title: string
+          testimonials_subtitle: string
+          testimonials_title: string
+          updated_at: string
+        }
+        Insert: {
+          about_description?: string
+          about_image?: string
+          about_title?: string
+          created_at?: string
+          cta_description?: string
+          cta_title?: string
+          features_subtitle?: string
+          features_title?: string
+          hero_image?: string
+          hero_subtitle?: string
+          hero_title?: string
+          id?: string
+          meta_description?: string
+          meta_title?: string
+          og_description?: string
+          og_image?: string
+          og_title?: string
+          testimonials_subtitle?: string
+          testimonials_title?: string
+          updated_at?: string
+        }
+        Update: {
+          about_description?: string
+          about_image?: string
+          about_title?: string
+          created_at?: string
+          cta_description?: string
+          cta_title?: string
+          features_subtitle?: string
+          features_title?: string
+          hero_image?: string
+          hero_subtitle?: string
+          hero_title?: string
+          id?: string
+          meta_description?: string
+          meta_title?: string
+          og_description?: string
+          og_image?: string
+          og_title?: string
+          testimonials_subtitle?: string
+          testimonials_title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
