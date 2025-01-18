@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { ImageSelector } from "@/components/admin/ImageSelector";
 import { BasicInfoFields } from "./form/BasicInfoFields";
