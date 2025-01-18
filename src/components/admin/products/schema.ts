@@ -1,14 +1,13 @@
 import * as z from "zod";
 import type { Json } from "@/integrations/supabase/types";
 
-// Create a more specific schema for form details
+// Create a more specific schema for form details that avoids recursive types
 export const detailsSchema = z.record(z.union([
   z.string(),
   z.number(),
   z.boolean(),
   z.null(),
-  z.array(z.unknown()),
-  z.record(z.unknown())
+  z.array(z.unknown())
 ])).transform((val): Json => val as Json);
 
 export const productFormSchema = z.object({
