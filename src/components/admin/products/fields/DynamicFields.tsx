@@ -36,45 +36,47 @@ export const DynamicFields = ({ schema }: DynamicFieldsProps) => {
           <FormItem>
             <FormLabel>{fieldSchema.label || fieldName}</FormLabel>
             <FormControl>
-              {type === "text" && (
-                <Input {...field} value={field.value ?? ""} />
-              )}
-              {type === "textarea" && (
-                <Textarea {...field} value={field.value ?? ""} />
-              )}
-              {type === "number" && (
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  value={field.value ?? ""}
-                />
-              )}
-              {type === "boolean" && (
-                <div className="pt-2">
-                  <Switch
-                    checked={field.value ?? false}
-                    onCheckedChange={field.onChange}
+              <div>
+                {type === "text" && (
+                  <Input {...field} value={field.value ?? ""} />
+                )}
+                {type === "textarea" && (
+                  <Textarea {...field} value={field.value ?? ""} />
+                )}
+                {type === "number" && (
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    value={field.value ?? ""}
                   />
-                </div>
-              )}
-              {type === "select" && (
-                <Select
-                  value={field.value ?? ""}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={`Select ${fieldSchema.label || fieldName}`} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {fieldSchema.options?.map((option: any) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+                )}
+                {type === "boolean" && (
+                  <div className="pt-2">
+                    <Switch
+                      checked={field.value ?? false}
+                      onCheckedChange={field.onChange}
+                    />
+                  </div>
+                )}
+                {type === "select" && (
+                  <Select
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={`Select ${fieldSchema.label || fieldName}`} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fieldSchema.options?.map((option: any) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>

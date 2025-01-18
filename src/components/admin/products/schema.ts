@@ -1,14 +1,14 @@
 import * as z from "zod";
 import type { Json } from "@/integrations/supabase/types";
 
-// Create a more specific schema for form details that avoids recursive types
+// Create a non-recursive schema for form details
 export const detailsSchema = z.record(z.union([
   z.string(),
   z.number(),
   z.boolean(),
   z.null(),
   z.array(z.unknown())
-])).transform((val): Json => val as Json);
+]));
 
 export const productFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
