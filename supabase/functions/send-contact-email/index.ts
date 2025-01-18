@@ -45,7 +45,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: "onboarding@resend.dev",
-        to: ["meerspascal@gmail.com"],
+        to: ["pasm28@hotmail.nl"], // Updated to your verified email
         subject: `Nieuw contact formulier: ${formData.topic}`,
         html: htmlContent,
       }),
