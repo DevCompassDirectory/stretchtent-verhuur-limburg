@@ -18,6 +18,7 @@ import Stretchtenten from "./pages/Stretchtenten";
 import TentDetail from "./pages/TentDetail";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import HomePage from "./pages/dashboard/HomePage";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +42,10 @@ const App = () => (
                       <Dashboard />
                     </ProtectedRoute>
                   }
-                />
+                >
+                  <Route index element={<div>Welcome to Dashboard</div>} />
+                  <Route path="home" element={<HomePage />} />
+                </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/projects/:id" element={<ProjectDetail />} />
