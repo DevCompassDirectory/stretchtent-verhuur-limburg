@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Select,
   SelectContent,
@@ -33,17 +34,39 @@ const ContactForm = () => {
     }
     
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Bericht verzonden",
-      description: "We nemen zo spoedig mogelijk contact met u op.",
-    });
-    
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+
+    try {
+      const formData = {
+        firstName: (e.target as HTMLFormElement).firstName.value,
+        lastName: (e.target as HTMLFormElement).lastName.value,
+        email: (e.target as HTMLFormElement).email.value,
+        phone: (e.target as HTMLFormElement).phone.value,
+        topic: (e.target as HTMLFormElement).topic.value,
+        message: (e.target as HTMLFormElement).message.value,
+      };
+
+      const { error } = await supabase.functions.invoke('send-contact-email', {
+        body: formData,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Bericht verzonden",
+        description: "We nemen zo spoedig mogelijk contact met u op.",
+      });
+      
+      (e.target as HTMLFormElement).reset();
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast({
+        title: "Er is iets misgegaan",
+        description: "Probeer het later opnieuw of neem telefonisch contact op.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
