@@ -20,6 +20,7 @@ export const tents: Tent[] = [
     length: "10 meter",
     height: "4 meter",
     area: "75m²",
+    display_order: 0,
     specifications: {
       width: "7,5 meter",
       length: "10 meter",
@@ -46,6 +47,7 @@ export const tents: Tent[] = [
     length: "15 meter",
     height: "4.5 meter",
     area: "150m²",
+    display_order: 1,
     specifications: {
       width: "10 meter",
       length: "15 meter",
@@ -72,6 +74,7 @@ export const tents: Tent[] = [
     length: "20 meter",
     height: "5 meter",
     area: "300m²",
+    display_order: 2,
     specifications: {
       width: "15 meter",
       length: "20 meter",
@@ -98,6 +101,7 @@ export const tents: Tent[] = [
     length: "30 meter",
     height: "6 meter",
     area: "600m²",
+    display_order: 3,
     specifications: {
       width: "20 meter",
       length: "30 meter",
@@ -124,6 +128,7 @@ export const tents: Tent[] = [
     length: "Op maat",
     height: "Op maat",
     area: "Op maat",
+    display_order: 4,
     specifications: {
       width: "Op maat",
       length: "Op maat",
