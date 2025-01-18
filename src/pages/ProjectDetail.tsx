@@ -124,7 +124,12 @@ const ProjectDetail = () => {
               <span className="sr-only">Close</span>
             </DialogClose>
             
-            <Carousel className="w-full max-w-[1200px]" defaultSlide={selectedImageIndex || 0}>
+            <Carousel 
+              className="w-full max-w-[1200px]" 
+              opts={{
+                startIndex: selectedImageIndex || 0,
+              }}
+            >
               <CarouselContent>
                 {allImages.map((image, index) => (
                   <CarouselItem key={index}>
