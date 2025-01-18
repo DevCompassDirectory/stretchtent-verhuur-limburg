@@ -29,8 +29,8 @@ export const AboutSection = () => {
           </div>
           <div className="relative aspect-square">
             <img
-              src="/lovable-uploads/69e87368-8229-4425-bfe6-926b1b98030c.png"
-              alt="Elegante stretchtent setup met lange tafels en witte decoratie voor een bruiloft"
+              src="/lovable-uploads/46c1ccce-6b21-4d68-910d-a0cf845c1594.png"
+              alt="Stretchtent opgezet in een tuin met stijlvolle zithoek en decoratieve verlichting"
               className="rounded-lg object-cover w-full h-full"
             />
           </div>
