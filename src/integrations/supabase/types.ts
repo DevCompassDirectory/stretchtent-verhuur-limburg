@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           about_description: string
           about_image: string
+          about_image_alt: string | null
           about_title: string
           created_at: string
           cta_description: string
@@ -36,6 +37,7 @@ export type Database = {
         Insert: {
           about_description?: string
           about_image?: string
+          about_image_alt?: string | null
           about_title?: string
           created_at?: string
           cta_description?: string
@@ -59,6 +61,7 @@ export type Database = {
         Update: {
           about_description?: string
           about_image?: string
+          about_image_alt?: string | null
           about_title?: string
           created_at?: string
           cta_description?: string

@@ -96,6 +96,12 @@ export const HomePageForm = ({ initialContent }: HomePageFormProps) => {
               label: "Image",
               description: "The image for the about section",
               type: "image",
+              altTextField: "about_image_alt",
+            },
+            {
+              name: "about_image_alt",
+              label: "Image Alt Text",
+              description: "Alternative text for the about image",
             },
           ]}
           form={form}

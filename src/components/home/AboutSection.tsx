@@ -33,7 +33,7 @@ export const AboutSection = ({ content }: AboutSectionProps) => {
           <div className="relative aspect-square">
             <img
               src={content.about_image}
-              alt="Stretchtent opgezet in een tuin met stijlvolle zithoek en decoratieve verlichting"
+              alt={content.about_image_alt || "Stretchtent opgezet in een tuin"}
               className="rounded-lg object-cover w-full h-full"
             />
           </div>
