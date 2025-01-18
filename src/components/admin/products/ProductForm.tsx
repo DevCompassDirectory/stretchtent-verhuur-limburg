@@ -71,6 +71,11 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
     },
   });
 
+  // Get the selected product type's form schema
+  const selectedProductType = productTypes?.find(
+    (type) => type.id === form.watch("product_type_id")
+  );
+
   const onSubmit = async (values: ProductFormValues) => {
     try {
       if (product) {
@@ -119,6 +124,34 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+        <FormField
+          control={form.control}
+          name="product_type_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Type</FormLabel>
+              <Select
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a product type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {productTypes?.map((type) => (
+                    <SelectItem key={type.id} value={type.id}>
+                      {type.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="name"
@@ -203,33 +236,13 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="product_type_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Product Type</FormLabel>
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a product type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {productTypes?.map((type) => (
-                    <SelectItem key={type.id} value={type.id}>
-                      {type.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {selectedProductType?.form_schema && (
+          <div className="space-y-4 border-t pt-4">
+            <h3 className="font-medium">Product Type Details</h3>
+            {/* Here we would render dynamic form fields based on the form_schema */}
+            {/* This is a placeholder for the dynamic fields implementation */}
+          </div>
+        )}
 
         <FormField
           control={form.control}
