@@ -25,25 +25,20 @@ export const ProjectImageCarousel = ({
   return (
     <Dialog open={selectedImageIndex !== null} onOpenChange={onClose}>
       <DialogContent className="max-w-[95vw] max-h-[95vh] w-full h-full p-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-50">
-          <X className="h-6 w-6" />
-          <span className="sr-only">Close</span>
-        </DialogClose>
-        
-        <div className="relative w-full h-[85vh] flex items-center justify-center p-8 bg-primary/20 rounded-lg">
+        <div className="relative w-full flex items-center justify-center p-8 bg-primary/20 rounded-lg">
           <Carousel 
-            className="w-full h-full" 
+            className="w-full" 
             opts={{
               startIndex: selectedImageIndex || 0,
             }}
           >
-            <CarouselContent className="h-full">
+            <CarouselContent>
               {allImages.map((image, index) => (
-                <CarouselItem key={index} className="h-full flex items-center justify-center">
+                <CarouselItem key={index} className="flex items-center justify-center">
                   <img
                     src={image}
                     alt={`${project.title} - foto ${index + 1}`}
-                    className="max-w-full h-[70vh] object-contain rounded-lg"
+                    className="max-w-full object-contain rounded-lg"
                   />
                 </CarouselItem>
               ))}
