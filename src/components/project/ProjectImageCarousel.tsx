@@ -30,7 +30,7 @@ export const ProjectImageCarousel = ({
           <span className="sr-only">Close</span>
         </DialogClose>
         
-        <div className="relative w-full h-[80vh] flex items-center justify-center p-4 bg-primary/10 rounded-lg">
+        <div className="relative w-full h-[85vh] flex items-center justify-center p-8 bg-primary/20 rounded-lg">
           <Carousel 
             className="w-full h-full" 
             opts={{
@@ -43,7 +43,7 @@ export const ProjectImageCarousel = ({
                   <img
                     src={image}
                     alt={`${project.title} - foto ${index + 1}`}
-                    className="max-w-full max-h-[80vh] object-contain rounded-lg"
+                    className="max-w-full h-[70vh] object-contain rounded-lg"
                   />
                 </CarouselItem>
               ))}
