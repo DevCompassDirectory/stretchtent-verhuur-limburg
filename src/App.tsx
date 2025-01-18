@@ -16,6 +16,8 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Stretchtenten from "./pages/Stretchtenten";
 import TentDetail from "./pages/TentDetail";
+import Accessories from "./pages/Accessories";
+import AccessoryDetail from "./pages/AccessoryDetail";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/dashboard/HomePage";
@@ -58,6 +60,8 @@ const App = () => (
                 <Route path="/algemene-voorwaarden" element={<Terms />} />
                 <Route path="/stretchtenten" element={<Stretchtenten />} />
                 <Route path="/stretchtenten/:id" element={<TentDetail />} />
+                <Route path="/accessoires" element={<Accessories />} />
+                <Route path="/accessoires/:slug" element={<AccessoryDetail />} />
               </Routes>
             </main>
             <Footer />
