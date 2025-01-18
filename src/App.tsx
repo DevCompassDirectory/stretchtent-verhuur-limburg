@@ -71,12 +71,16 @@ const router = createBrowserRouter([
   },
 ]);
 
-function App() {
+const AppWithProviders = () => {
   return (
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
   );
+};
+
+function App() {
+  return <AppWithProviders />;
 }
 
 export default App;
