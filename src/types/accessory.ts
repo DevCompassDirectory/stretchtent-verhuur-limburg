@@ -1,4 +1,4 @@
-export type ProductType = "tent" | "floor" | "lighting" | "furniture";
+export type ProductType = "deco" | "floor" | "lighting" | "furniture";
 
 export interface Accessory {
   id: string;

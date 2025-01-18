@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import type { Accessory } from "@/types/accessory";
+import type { Accessory, ProductType } from "@/types/accessory";
 
 interface FormValues {
   name: string;
   slug: string;
-  type: "tent" | "floor" | "lighting" | "furniture";
+  type: ProductType;
   description: string;
   short_description: string;
   image: string;
@@ -31,7 +31,7 @@ export const useAccessoryForm = (
     } : {
       name: "",
       slug: "",
-      type: "tent",
+      type: "deco",
       description: "",
       short_description: "",
       image: "",
@@ -56,7 +56,7 @@ export const useAccessoryForm = (
       } else {
         const { error } = await supabase
           .from("accessories")
-          .insert([data]);
+          .insert(data);
 
         if (error) throw error;
 

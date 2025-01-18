@@ -62,7 +62,7 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="tent">Tent</SelectItem>
+                <SelectItem value="deco">Decoration</SelectItem>
                 <SelectItem value="floor">Floor</SelectItem>
                 <SelectItem value="lighting">Lighting</SelectItem>
                 <SelectItem value="furniture">Furniture</SelectItem>
