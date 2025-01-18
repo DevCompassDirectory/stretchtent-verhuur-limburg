@@ -46,15 +46,54 @@ export const MediaEditDialog = ({
     if (!image) return;
 
     try {
-      const { error } = await supabase
-        .from("images")
-        .update({
-          filename: data.filename,
-          alt_text: data.alt_text || null,
-        })
-        .eq("id", image.id);
+      // Get the file extension from the original URL
+      const fileExt = image.original_url.split('.').pop();
+      const newFilePath = `${image.id}.${fileExt}`;
+      const oldFilePath = image.original_url.split('/').pop();
 
-      if (error) throw error;
+      if (oldFilePath && data.filename !== image.filename) {
+        // Copy the file with the new name
+        const { error: copyError } = await supabase.storage
+          .from('images')
+          .copy(oldFilePath, newFilePath);
+
+        if (copyError) throw copyError;
+
+        // Delete the old file
+        const { error: deleteError } = await supabase.storage
+          .from('images')
+          .remove([oldFilePath]);
+
+        if (deleteError) throw deleteError;
+
+        // Get the new public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('images')
+          .getPublicUrl(newFilePath);
+
+        // Update the database record
+        const { error: updateError } = await supabase
+          .from("images")
+          .update({
+            filename: data.filename,
+            alt_text: data.alt_text || null,
+            original_url: publicUrl,
+          })
+          .eq("id", image.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Just update the metadata if filename hasn't changed
+        const { error: updateError } = await supabase
+          .from("images")
+          .update({
+            filename: data.filename,
+            alt_text: data.alt_text || null,
+          })
+          .eq("id", image.id);
+
+        if (updateError) throw updateError;
+      }
 
       toast({
         title: "Success",

@@ -59,11 +59,19 @@ const MediaPage = () => {
 
   const handleResize = async (id: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('resize-image', {
-        body: { imageId: id }
+      const response = await fetch('/.netlify/functions/resize-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageId: id }),
       });
 
-      if (error) throw error;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to resize image');
+      }
 
       toast({
         title: "Success",
