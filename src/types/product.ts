@@ -5,6 +5,8 @@ export interface ProductType {
   form_schema: {
     fields: FormField[];
   };
+  created_at: string;
+  updated_at: string;
 }
 
 export interface FormField {
