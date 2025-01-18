@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "@/pages/Index";
 import Contact from "@/pages/Contact";
@@ -13,6 +14,8 @@ import Dashboard from "@/pages/Dashboard";
 import HomePage from "@/pages/dashboard/HomePage";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import "./App.css";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -74,7 +77,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
 
 export default App;
