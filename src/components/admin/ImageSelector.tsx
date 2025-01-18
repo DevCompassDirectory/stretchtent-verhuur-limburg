@@ -97,7 +97,7 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle>Select Image</DialogTitle>
           </DialogHeader>

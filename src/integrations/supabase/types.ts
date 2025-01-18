@@ -20,6 +20,7 @@ export type Database = {
           features_subtitle: string
           features_title: string
           hero_image: string
+          hero_image_alt: string | null
           hero_subtitle: string
           hero_title: string
           id: string
@@ -42,6 +43,7 @@ export type Database = {
           features_subtitle?: string
           features_title?: string
           hero_image?: string
+          hero_image_alt?: string | null
           hero_subtitle?: string
           hero_title?: string
           id?: string
@@ -64,6 +66,7 @@ export type Database = {
           features_subtitle?: string
           features_title?: string
           hero_image?: string
+          hero_image_alt?: string | null
           hero_subtitle?: string
           hero_title?: string
           id?: string
