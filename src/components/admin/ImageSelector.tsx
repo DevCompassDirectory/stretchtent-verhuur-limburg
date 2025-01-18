@@ -75,13 +75,13 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden">
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Select Image</DialogTitle>
           </DialogHeader>
           
-          <div className="flex flex-col space-y-4">
-            <ScrollArea className="h-[500px] pr-4">
+          <div className="flex flex-col space-y-4 max-h-[80vh] overflow-hidden">
+            <ScrollArea className="h-[400px] pr-4">
               <div className="grid grid-cols-3 gap-4">
                 {isLoading ? (
                   <div>Loading images...</div>
@@ -108,13 +108,13 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
             </ScrollArea>
 
             {selectedImage && (
-              <div className="space-y-4 border-t pt-4">
+              <div className="border-t pt-4">
                 <div className="space-y-2">
                   <Label>Available Sizes</Label>
                   <RadioGroup
                     value={selectedSize}
                     onValueChange={setSelectedSize}
-                    className="flex gap-4"
+                    className="flex flex-wrap gap-4"
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="original" id="original" />
@@ -140,7 +140,7 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
                     )}
                   </RadioGroup>
                 </div>
-                <Button onClick={handleConfirm} className="w-full">
+                <Button onClick={handleConfirm} className="w-full mt-4">
                   Confirm Selection
                 </Button>
               </div>
