@@ -1,7 +1,12 @@
 import type { Tent } from "@/types/tent";
 
 interface TentSpecificationsProps {
-  specifications: Tent["specifications"];
+  specifications: {
+    width: string;
+    length: string;
+    height: string;
+    area: string;
+  };
 }
 
 export const TentSpecifications = ({ specifications }: TentSpecificationsProps) => {

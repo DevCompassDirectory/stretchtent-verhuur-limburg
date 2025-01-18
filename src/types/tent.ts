@@ -13,4 +13,10 @@ export interface Tent {
   height: string;
   area: string;
   is_custom_config?: boolean;
+  specifications?: {
+    width: string;
+    length: string;
+    height: string;
+    area: string;
+  };
 }
