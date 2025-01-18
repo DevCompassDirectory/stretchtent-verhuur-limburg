@@ -27,7 +27,7 @@ export const useAccessoryForm = (
       description: accessory.description,
       short_description: accessory.short_description,
       image: accessory.image,
-      display_order: accessory.display_order || 0,
+      display_order: accessory.display_order,
     } : {
       name: "",
       slug: "",

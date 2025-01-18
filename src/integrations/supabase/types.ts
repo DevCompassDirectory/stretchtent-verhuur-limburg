@@ -259,7 +259,7 @@ export type Database = {
         | "cta"
         | "features"
         | "testimonials"
-      product_type: "tent" | "floor" | "lighting" | "furniture"
+      product_type: "deco" | "floor" | "lighting" | "furniture"
     }
     CompositeTypes: {
       [_ in never]: never

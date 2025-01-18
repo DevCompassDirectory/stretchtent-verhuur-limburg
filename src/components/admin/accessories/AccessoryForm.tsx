@@ -5,6 +5,7 @@ import { ImageSelector } from "@/components/admin/ImageSelector";
 import { BasicInfoFields } from "./form/BasicInfoFields";
 import { useAccessoryForm } from "@/hooks/use-accessory-form";
 import type { Accessory } from "@/types/accessory";
+import { useEffect } from "react";
 
 interface AccessoryFormProps {
   accessory: Accessory | null;
@@ -20,6 +21,31 @@ export const AccessoryForm = ({
   onSuccess,
 }: AccessoryFormProps) => {
   const { form, onSubmit } = useAccessoryForm(accessory, onSuccess, onOpenChange);
+
+  // Reset form when accessory changes
+  useEffect(() => {
+    if (accessory) {
+      form.reset({
+        name: accessory.name,
+        slug: accessory.slug,
+        type: accessory.type,
+        description: accessory.description,
+        short_description: accessory.short_description,
+        image: accessory.image,
+        display_order: accessory.display_order,
+      });
+    } else {
+      form.reset({
+        name: "",
+        slug: "",
+        type: "tent",
+        description: "",
+        short_description: "",
+        image: "",
+        display_order: 0,
+      });
+    }
+  }, [accessory, form]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
