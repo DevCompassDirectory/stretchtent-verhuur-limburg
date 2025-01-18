@@ -1,12 +1,14 @@
 import * as z from "zod";
 import type { Json } from "@/integrations/supabase/types";
 
-const detailsSchema = z.record(z.union([
+// Create a more specific schema for form details
+export const detailsSchema = z.record(z.union([
   z.string(),
   z.number(),
   z.boolean(),
-  z.record(z.any()),
-  z.array(z.any())
+  z.null(),
+  z.record(z.unknown()),
+  z.array(z.unknown())
 ]));
 
 export const productFormSchema = z.object({
