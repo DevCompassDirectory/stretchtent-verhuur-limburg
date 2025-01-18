@@ -7,9 +7,8 @@ export const HeroSection = () => {
         <img
           src="/lovable-uploads/707a77e0-8dde-45b1-92c8-5b2c5b5708f8.png"
           alt="Elegante stretchtent bruiloft setup met witte decoratie"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover brightness-[0.7]"
         />
-        <div className="absolute inset-0 bg-black/30" />
       </div>
       <div className="relative container mx-auto px-4 h-full flex items-center">
         <div className="max-w-2xl text-white space-y-6 animate-fade-up">
