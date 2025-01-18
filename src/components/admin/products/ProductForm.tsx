@@ -73,15 +73,10 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
 
   const onSubmit = async (values: ProductFormValues) => {
     try {
-      const submissionData = {
-        ...values,
-        price: Number(values.price),
-      };
-
       if (product) {
         const { error } = await supabase
           .from("products")
-          .update(submissionData)
+          .update(values)
           .eq("id", product.id);
 
         if (error) throw error;
@@ -89,7 +84,7 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
       } else {
         const { error } = await supabase
           .from("products")
-          .insert(submissionData);
+          .insert(values);
 
         if (error) throw error;
         toast({ description: "Product created successfully" });
