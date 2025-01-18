@@ -56,7 +56,7 @@ const ProductsPage = () => {
 
   const renderProductForm = () => {
     switch (selectedProductType) {
-      case "tent-type-id": // Replace with actual tent type ID
+      case "2529f53f-8a9c-412b-9176-4cc2dbdf02a5": // Stretchtent
         return (
           <TentProductForm
             product={editingProduct}
@@ -64,7 +64,7 @@ const ProductsPage = () => {
             productTypeId={selectedProductType}
           />
         );
-      case "accessory-type-id": // Replace with actual accessory type ID
+      case "f44a5b29-fca3-4fe3-b8d3-0c7e5d47674a": // Verlichting
         return (
           <AccessoryProductForm
             product={editingProduct}
@@ -72,7 +72,7 @@ const ProductsPage = () => {
             productTypeId={selectedProductType}
           />
         );
-      case "furniture-type-id": // Replace with actual furniture type ID
+      case "b36e2d83-45d4-483d-bd9a-fd0c9f92cdf5": // Meubilair
         return (
           <FurnitureProductForm
             product={editingProduct}
@@ -80,7 +80,7 @@ const ProductsPage = () => {
             productTypeId={selectedProductType}
           />
         );
-      case "service-type-id": // Replace with actual service type ID
+      case "a47497df-90b9-48f5-b3fa-281f77c4ef0a": // Vloer
         return (
           <ServiceProductForm
             product={editingProduct}
