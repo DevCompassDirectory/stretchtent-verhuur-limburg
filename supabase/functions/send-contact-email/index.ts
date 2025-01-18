@@ -44,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Tent Verhuur Pascal <noreply@yourdomain.com>", // Update this with your verified domain
+        from: "onboarding@resend.dev",
         to: ["meerspascal@gmail.com"],
         subject: `Nieuw contact formulier: ${formData.topic}`,
         html: htmlContent,
