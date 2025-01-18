@@ -17,46 +17,48 @@ import "./App.css";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Index />,
+    element: <AuthProvider><Index /></AuthProvider>,
   },
   {
     path: "/contact",
-    element: <Contact />,
+    element: <AuthProvider><Contact /></AuthProvider>,
   },
   {
     path: "/projects",
-    element: <Projects />,
+    element: <AuthProvider><Projects /></AuthProvider>,
   },
   {
     path: "/projects/:id",
-    element: <ProjectDetail />,
+    element: <AuthProvider><ProjectDetail /></AuthProvider>,
   },
   {
     path: "/stretchtenten",
-    element: <Stretchtenten />,
+    element: <AuthProvider><Stretchtenten /></AuthProvider>,
   },
   {
     path: "/stretchtenten/:id",
-    element: <TentDetail />,
+    element: <AuthProvider><TentDetail /></AuthProvider>,
   },
   {
     path: "/privacy",
-    element: <Privacy />,
+    element: <AuthProvider><Privacy /></AuthProvider>,
   },
   {
     path: "/terms",
-    element: <Terms />,
+    element: <AuthProvider><Terms /></AuthProvider>,
   },
   {
     path: "/auth",
-    element: <Auth />,
+    element: <AuthProvider><Auth /></AuthProvider>,
   },
   {
     path: "/dashboard",
     element: (
-      <ProtectedRoute>
-        <Dashboard />
-      </ProtectedRoute>
+      <AuthProvider>
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      </AuthProvider>
     ),
     children: [
       {
@@ -71,16 +73,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-const AppWithProviders = () => {
-  return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
-  );
-};
-
 function App() {
-  return <AppWithProviders />;
+  return <RouterProvider router={router} />;
 }
 
 export default App;
