@@ -42,7 +42,7 @@ export const MobileNav = ({
             onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
             className="flex items-center justify-between w-full text-sm font-medium transition-colors hover:text-primary"
           >
-            Stretchtenten
+            Huren
             <ChevronDown className={`h-4 w-4 transition-transform ${isSubMenuOpen ? 'rotate-180' : ''}`} />
           </button>
           

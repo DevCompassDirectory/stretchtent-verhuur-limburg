@@ -23,10 +23,21 @@ export const Navbar = () => {
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
+      // First, get the "Huren" category
+      const { data: parentCategory } = await supabase
+        .from("rental_categories")
+        .select("id")
+        .eq("name", "Huren")
+        .single();
+
+      if (!parentCategory) return [];
+
+      // Then get all active categories with this parent
       const { data, error } = await supabase
         .from("rental_categories")
         .select("*")
-        .is("parent_id", null)
+        .eq("parent_id", parentCategory.id)
+        .eq("is_active", true)
         .order("sort_order");
       
       if (error) throw error;
@@ -65,7 +76,7 @@ export const Navbar = () => {
                   variant="ghost" 
                   className="flex items-center gap-1 -mx-4"
                 >
-                  Stretchtenten
+                  Huren
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
