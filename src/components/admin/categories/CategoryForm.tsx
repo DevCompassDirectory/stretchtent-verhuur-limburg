@@ -1,39 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  slug: z.string().min(2, "Slug must be at least 2 characters"),
-  description: z.string().optional(),
-  parent_id: z.string().optional(),
-  sort_order: z.number().int().min(0),
-  is_active: z.boolean(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { categoryFormSchema, type CategoryFormValues } from "./schema";
+import { BasicFields } from "./fields/BasicFields";
+import { ParentCategoryField } from "./fields/ParentCategoryField";
+import { AdvancedFields } from "./fields/AdvancedFields";
 
 interface CategoryFormProps {
   category?: any;
@@ -45,8 +20,8 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CategoryFormValues>({
+    resolver: zodResolver(categoryFormSchema),
     defaultValues: {
       name: category?.name || "",
       slug: category?.slug || "",
@@ -57,7 +32,7 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
     },
   });
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: CategoryFormValues) => {
     setIsLoading(true);
     try {
       if (category) {
@@ -67,7 +42,7 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
             name: values.name,
             slug: values.slug,
             description: values.description,
-            parent_id: values.parent_id || null,
+            parent_id: values.parent_id === "null" ? null : values.parent_id,
             sort_order: values.sort_order,
             is_active: values.is_active,
           })
@@ -80,7 +55,7 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
             name: values.name,
             slug: values.slug,
             description: values.description,
-            parent_id: values.parent_id || null,
+            parent_id: values.parent_id === "null" ? null : values.parent_id,
             sort_order: values.sort_order,
             is_active: values.is_active,
           });
@@ -105,112 +80,9 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Slug</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="parent_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Parent Category</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a parent category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="null">None</SelectItem>
-                  {categories?.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="sort_order"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sort Order</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="is_active"
-          render={({ field }) => (
-            <FormItem className="flex items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Active</FormLabel>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <BasicFields form={form} />
+        <ParentCategoryField form={form} categories={categories} />
+        <AdvancedFields form={form} />
 
         <Button type="submit" disabled={isLoading} className="w-full">
           {isLoading ? "Saving..." : category ? "Update Category" : "Create Category"}
