@@ -5,8 +5,8 @@ export const HeroSection = () => {
     <section className="relative h-screen">
       <div className="absolute inset-0">
         <img
-          src="/lovable-uploads/707a77e0-8dde-45b1-92c8-5b2c5b5708f8.png"
-          alt="Elegante stretchtent bruiloft setup met witte decoratie"
+          src="/lovable-uploads/32b2f57b-47e0-4cf1-baff-6f2260743af8.png"
+          alt="Elegante stretchtent bruiloft setup met witte decoratie en lange dinertafels"
           className="w-full h-full object-cover brightness-[0.7]"
         />
       </div>
