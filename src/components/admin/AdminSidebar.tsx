@@ -1,4 +1,4 @@
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Home } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import {
   Sheet,
@@ -14,6 +14,11 @@ const menuItems = [
     title: "Overview",
     icon: LayoutDashboard,
     path: "/dashboard",
+  },
+  {
+    title: "Home Page",
+    icon: Home,
+    path: "/dashboard/home",
   },
 ];
 
