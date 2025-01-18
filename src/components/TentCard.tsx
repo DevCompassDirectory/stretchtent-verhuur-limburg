@@ -26,17 +26,17 @@ export const TentCard = ({ tent }: TentCardProps) => {
               {tent.size}
             </Badge>
             <h3 className="text-2xl font-semibold">{tent.name}</h3>
-            <p className="text-muted-foreground">{tent.description}</p>
+            <p className="text-muted-foreground">{tent.short_description}</p>
             <div className="space-y-2">
               <p className="text-sm">
                 <span className="font-semibold">Capaciteit:</span> {tent.capacity}
               </p>
               <p className="text-sm">
-                <span className="font-semibold">Oppervlakte:</span> {tent.specifications.area}
+                <span className="font-semibold">Oppervlakte:</span> {tent.area}
               </p>
             </div>
           </div>
-          {tent.isCustomConfig ? (
+          {tent.is_custom_config ? (
             <Button className="mt-6" asChild>
               <Link to="/contact" className="flex items-center justify-center gap-2">
                 <MessageSquare size={16} />
@@ -45,7 +45,7 @@ export const TentCard = ({ tent }: TentCardProps) => {
             </Button>
           ) : (
             <Button variant="outline" className="mt-6" asChild>
-              <Link to={`/stretchtenten/${tent.id}`} className="flex items-center justify-center gap-2">
+              <Link to={`/stretchtenten/${tent.slug}`} className="flex items-center justify-center gap-2">
                 Bekijk Details
                 <ArrowRight size={16} />
               </Link>

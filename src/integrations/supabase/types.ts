@@ -144,6 +144,63 @@ export type Database = {
         }
         Relationships: []
       }
+      stretchtents: {
+        Row: {
+          area: string
+          capacity: string
+          created_at: string
+          description: string
+          features: string[]
+          height: string
+          id: string
+          image: string
+          is_custom_config: boolean | null
+          length: string
+          name: string
+          short_description: string
+          size: string
+          slug: string
+          updated_at: string
+          width: string
+        }
+        Insert: {
+          area: string
+          capacity: string
+          created_at?: string
+          description: string
+          features: string[]
+          height: string
+          id?: string
+          image: string
+          is_custom_config?: boolean | null
+          length: string
+          name: string
+          short_description: string
+          size: string
+          slug: string
+          updated_at?: string
+          width: string
+        }
+        Update: {
+          area?: string
+          capacity?: string
+          created_at?: string
+          description?: string
+          features?: string[]
+          height?: string
+          id?: string
+          image?: string
+          is_custom_config?: boolean | null
+          length?: string
+          name?: string
+          short_description?: string
+          size?: string
+          slug?: string
+          updated_at?: string
+          width?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

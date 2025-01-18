@@ -4,14 +4,25 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { TentSpecifications } from "@/components/TentSpecifications";
 import { TentFeatures } from "@/components/TentFeatures";
 import { ArrowLeft } from "lucide-react";
-import { tents, relatedProjects } from "@/data/tents";
+import { useTent } from "@/hooks/use-tents";
+import { relatedProjects } from "@/data/tents";
 
 const TentDetail = () => {
   const { id } = useParams();
-  const tent = tents.find(t => t.id === id);
+  const { data: tent, isLoading, error } = useTent(id || "");
   const projects = relatedProjects[id as keyof typeof relatedProjects] || [];
 
-  if (!tent) {
+  if (isLoading) {
+    return (
+      <div className="pt-24 pb-20">
+        <div className="container mx-auto px-4">
+          <div className="h-96 bg-muted animate-pulse rounded-lg" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !tent) {
     return (
       <div className="pt-24 pb-20">
         <div className="container mx-auto px-4 text-center">
@@ -23,6 +34,13 @@ const TentDetail = () => {
       </div>
     );
   }
+
+  const specifications = {
+    width: tent.width,
+    length: tent.length,
+    height: tent.height,
+    area: tent.area,
+  };
 
   return (
     <div className="pt-24 pb-20">
@@ -47,7 +65,7 @@ const TentDetail = () => {
             <h1 className="text-4xl font-bold">{tent.name}</h1>
             <p className="text-muted-foreground">{tent.description}</p>
             
-            <TentSpecifications specifications={tent.specifications} />
+            <TentSpecifications specifications={specifications} />
             <TentFeatures features={tent.features} />
 
             <Button size="lg" asChild>
