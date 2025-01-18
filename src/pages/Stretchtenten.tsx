@@ -13,7 +13,7 @@ const tents = [
       "Flexibele configuratie",
       "Perfect voor tuinfeesten"
     ],
-    image: "/photo-1482938289607-e9573fc25ebb",
+    image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
     specifications: {
       width: "7,5 meter",
       length: "10 meter",
