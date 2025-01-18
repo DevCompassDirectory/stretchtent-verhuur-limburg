@@ -33,6 +33,8 @@ const formSchema = z.object({
   is_active: z.boolean(),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 interface CategoryFormProps {
   category?: any;
   categories?: any[];
@@ -43,7 +45,7 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: category?.name || "",
@@ -55,19 +57,33 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     try {
       if (category) {
         const { error } = await supabase
           .from("rental_categories")
-          .update(values)
+          .update({
+            name: values.name,
+            slug: values.slug,
+            description: values.description,
+            parent_id: values.parent_id || null,
+            sort_order: values.sort_order,
+            is_active: values.is_active,
+          })
           .eq("id", category.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from("rental_categories")
-          .insert([values]);
+          .insert({
+            name: values.name,
+            slug: values.slug,
+            description: values.description,
+            parent_id: values.parent_id || null,
+            sort_order: values.sort_order,
+            is_active: values.is_active,
+          });
         if (error) throw error;
       }
       toast({
