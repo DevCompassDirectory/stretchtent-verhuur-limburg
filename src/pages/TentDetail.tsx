@@ -5,6 +5,26 @@ import { ArrowLeft, Check } from "lucide-react";
 
 const tents = [
   {
+    id: "extra-small",
+    name: "Compact Mini Stretchtent",
+    size: "7,5 x 10m",
+    capacity: "Tot 50 personen",
+    description: "Ideaal voor kleine bijeenkomsten en intieme feesten in de tuin.",
+    features: [
+      "Ultra-compact design",
+      "Snelle opzettijd",
+      "Flexibele configuratie",
+      "Perfect voor tuinfeesten"
+    ],
+    image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
+    specifications: {
+      width: "7,5 meter",
+      length: "10 meter",
+      height: "4 meter",
+      area: "75m²"
+    }
+  },
+  {
     id: "small",
     name: "Compact Stretchtent",
     size: "10 x 15m",
@@ -67,6 +87,16 @@ const tents = [
 ];
 
 const relatedProjects = {
+  "extra-small": [
+    {
+      id: "0",
+      title: "Tuinfeest in Maastricht",
+      description: "Een compacte stretchtent setup voor een gezellig tuinfeest.",
+      image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
+      date: "10 Juni 2023",
+      category: "Tuinfeest"
+    }
+  ],
   "small": [
     {
       id: "1",
