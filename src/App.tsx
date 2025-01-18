@@ -1,87 +1,63 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
-import Index from "@/pages/Index";
-import Contact from "@/pages/Contact";
-import Projects from "@/pages/Projects";
-import ProjectDetail from "@/pages/ProjectDetail";
-import Stretchtenten from "@/pages/Stretchtenten";
-import TentDetail from "@/pages/TentDetail";
-import Privacy from "@/pages/Privacy";
-import Terms from "@/pages/Terms";
-import Auth from "@/pages/Auth";
-import Dashboard from "@/pages/Dashboard";
-import HomePage from "@/pages/dashboard/HomePage";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import "./App.css";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import Home from "./pages/Index";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Stretchtenten from "./pages/Stretchtenten";
+import TentDetail from "./pages/TentDetail";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <AuthProvider><Index /></AuthProvider>,
-  },
-  {
-    path: "/contact",
-    element: <AuthProvider><Contact /></AuthProvider>,
-  },
-  {
-    path: "/projects",
-    element: <AuthProvider><Projects /></AuthProvider>,
-  },
-  {
-    path: "/projects/:id",
-    element: <AuthProvider><ProjectDetail /></AuthProvider>,
-  },
-  {
-    path: "/stretchtenten",
-    element: <AuthProvider><Stretchtenten /></AuthProvider>,
-  },
-  {
-    path: "/stretchtenten/:id",
-    element: <AuthProvider><TentDetail /></AuthProvider>,
-  },
-  {
-    path: "/privacy",
-    element: <AuthProvider><Privacy /></AuthProvider>,
-  },
-  {
-    path: "/terms",
-    element: <AuthProvider><Terms /></AuthProvider>,
-  },
-  {
-    path: "/auth",
-    element: <AuthProvider><Auth /></AuthProvider>,
-  },
-  {
-    path: "/dashboard",
-    element: (
-      <AuthProvider>
-        <ProtectedRoute>
-          <Dashboard />
-        </ProtectedRoute>
-      </AuthProvider>
-    ),
-    children: [
-      {
-        path: "",
-        element: <div>Welcome to the dashboard</div>,
-      },
-      {
-        path: "homepage",
-        element: <HomePage />,
-      },
-    ],
-  },
-]);
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <ScrollToTop />
+          <Toaster />
+          <Sonner />
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/auth" element={<Auth />} />
+                <Route 
+                  path="/dashboard" 
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/" element={<Home />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/:id" element={<ProjectDetail />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/algemene-voorwaarden" element={<Terms />} />
+                <Route path="/stretchtenten" element={<Stretchtenten />} />
+                <Route path="/stretchtenten/:id" element={<TentDetail />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </AuthProvider>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
