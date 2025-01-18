@@ -30,7 +30,7 @@ export const ProjectImageCarousel = ({
           <span className="sr-only">Close</span>
         </DialogClose>
         
-        <div className="relative w-full h-full flex items-center justify-center p-6">
+        <div className="relative w-full h-[80vh] flex items-center justify-center p-4 bg-primary/10 rounded-lg">
           <Carousel 
             className="w-full h-full" 
             opts={{
