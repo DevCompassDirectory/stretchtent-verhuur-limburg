@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import { ProductTypeSelector } from "@/components/admin/products/ProductTypeSelector";
 import { TentProductForm } from "@/components/admin/products/forms/TentProductForm";
+import { AccessoryProductForm } from "@/components/admin/products/forms/AccessoryProductForm";
+import { FurnitureProductForm } from "@/components/admin/products/forms/FurnitureProductForm";
+import { ServiceProductForm } from "@/components/admin/products/forms/ServiceProductForm";
 import { ProductTable } from "@/components/admin/products/ProductTable";
 
 const ProductsPage = () => {
@@ -52,11 +55,34 @@ const ProductsPage = () => {
   };
 
   const renderProductForm = () => {
-    // Add more cases for different product types
     switch (selectedProductType) {
       case "tent-type-id": // Replace with actual tent type ID
         return (
           <TentProductForm
+            product={editingProduct}
+            onSuccess={handleSuccess}
+            productTypeId={selectedProductType}
+          />
+        );
+      case "accessory-type-id": // Replace with actual accessory type ID
+        return (
+          <AccessoryProductForm
+            product={editingProduct}
+            onSuccess={handleSuccess}
+            productTypeId={selectedProductType}
+          />
+        );
+      case "furniture-type-id": // Replace with actual furniture type ID
+        return (
+          <FurnitureProductForm
+            product={editingProduct}
+            onSuccess={handleSuccess}
+            productTypeId={selectedProductType}
+          />
+        );
+      case "service-type-id": // Replace with actual service type ID
+        return (
+          <ServiceProductForm
             product={editingProduct}
             onSuccess={handleSuccess}
             productTypeId={selectedProductType}
