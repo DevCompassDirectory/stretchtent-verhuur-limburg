@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MediaUploadDialog } from "@/components/admin/MediaUploadDialog";
 import { MediaEditDialog } from "@/components/admin/MediaEditDialog";
-import { Image, Pencil, Trash2 } from "lucide-react";
+import { Image, Pencil, Trash2, Maximize2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface ImageData {
@@ -52,6 +52,36 @@ const MediaPage = () => {
       toast({
         title: "Error",
         description: "Failed to delete image",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleResize = async (id: string) => {
+    try {
+      const response = await fetch('/functions/v1/resize-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+        },
+        body: JSON.stringify({ imageId: id })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to resize image');
+      }
+
+      toast({
+        title: "Success",
+        description: "Image resized successfully",
+      });
+      refetch();
+    } catch (error) {
+      console.error("Error resizing image:", error);
+      toast({
+        title: "Error",
+        description: "Failed to resize image",
         variant: "destructive",
       });
     }
@@ -113,6 +143,13 @@ const MediaPage = () => {
                       onClick={() => setEditingImage(image)}
                     >
                       <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleResize(image.id)}
+                    >
+                      <Maximize2 className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
