@@ -7,6 +7,7 @@ export interface HomePageContent {
   about_title: string;
   about_description: string;
   about_image: string;
+  about_image_alt: string | null;
   features_title: string;
   features_subtitle: string;
   testimonials_title: string;
