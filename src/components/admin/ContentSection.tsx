@@ -10,6 +10,7 @@ interface Field {
   label: string;
   description: string;
   type?: "text" | "textarea" | "image";
+  altTextField?: keyof HomePageContent;
 }
 
 interface ContentSectionProps {
@@ -42,6 +43,9 @@ export const ContentSection = ({ title, fields, form }: ContentSectionProps) => 
                       <ImageSelector
                         value={formField.value}
                         onChange={formField.onChange}
+                        onAltTextChange={field.altTextField ? 
+                          (altText) => form.setValue(field.altTextField!, altText) : 
+                          undefined}
                       />
                     ) : (
                       <Input {...formField} />

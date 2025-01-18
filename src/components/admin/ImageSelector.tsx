@@ -11,9 +11,10 @@ import { Label } from "@/components/ui/label";
 interface ImageSelectorProps {
   value: string;
   onChange: (value: string) => void;
+  onAltTextChange?: (altText: string) => void;
 }
 
-export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
+export const ImageSelector = ({ value, onChange, onAltTextChange }: ImageSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [selectedSize, setSelectedSize] = useState<string>("original");
@@ -33,6 +34,9 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
   const handleSelect = (image: any) => {
     setSelectedImage(image);
     setSelectedSize("original"); // Reset size selection when new image is selected
+    if (onAltTextChange && image.alt_text) {
+      onAltTextChange(image.alt_text);
+    }
   };
 
   const handleConfirm = () => {
