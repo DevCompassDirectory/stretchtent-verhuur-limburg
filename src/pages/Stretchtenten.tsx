@@ -33,7 +33,7 @@ const tents = [
       "Flexibele configuratie",
       "Waterafstotend materiaal"
     ],
-    image: "/photo-1482938289607-e9573fc25ebb",
+    image: "/lovable-uploads/3f4cfa7b-a0ef-46d8-897a-60b0cc061d60.png",
     specifications: {
       width: "10 meter",
       length: "15 meter",
@@ -53,7 +53,7 @@ const tents = [
       "Meerdere configuraties",
       "UV-bestendig"
     ],
-    image: "/photo-1469474968028-56623f02e42e",
+    image: "/lovable-uploads/7ee4fd54-25f9-481e-a15d-b774fe108b8a.png",
     specifications: {
       width: "15 meter",
       length: "20 meter",
@@ -73,7 +73,7 @@ const tents = [
       "Professioneel geluidssysteem mogelijk",
       "Inclusief noodverlichting"
     ],
-    image: "/photo-1470813740244-df37b8c1edcb",
+    image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
     specifications: {
       width: "20 meter",
       length: "30 meter",
@@ -93,7 +93,7 @@ const tents = [
       "Aangepaste configuratie",
       "Professioneel advies"
     ],
-    image: "/photo-1469474968028-56623f02e42e",
+    image: "/lovable-uploads/7ee4fd54-25f9-481e-a15d-b774fe108b8a.png",
     specifications: {
       width: "Op maat",
       length: "Op maat",
