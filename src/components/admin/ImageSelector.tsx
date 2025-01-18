@@ -21,12 +21,26 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
         .list();
 
       if (error) throw error;
-      return files;
+
+      // Get public URLs for all images
+      const filesWithUrls = await Promise.all(
+        files.map(async (file) => {
+          const { data: { publicUrl } } = supabase.storage
+            .from("images")
+            .getPublicUrl(file.name);
+          return { ...file, publicUrl };
+        })
+      );
+
+      return filesWithUrls;
     },
   });
 
-  const handleSelect = (path: string) => {
-    const publicUrl = `${path}`;
+  const handleSelect = async (fileName: string) => {
+    const { data: { publicUrl } } = supabase.storage
+      .from("images")
+      .getPublicUrl(fileName);
+    
     onChange(publicUrl);
     setIsOpen(false);
   };
@@ -65,10 +79,10 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
                 <button
                   key={file.name}
                   className="relative aspect-video overflow-hidden rounded-lg border hover:border-primary"
-                  onClick={() => handleSelect(`/lovable-uploads/${file.name}`)}
+                  onClick={() => handleSelect(file.name)}
                 >
                   <img
-                    src={`/lovable-uploads/${file.name}`}
+                    src={file.publicUrl}
                     alt={file.name}
                     className="h-full w-full object-cover"
                   />
