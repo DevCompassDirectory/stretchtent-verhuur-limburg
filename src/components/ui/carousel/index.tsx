@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { CarouselContext, type CarouselApi, type CarouselOptions, type CarouselPlugin } from "./CarouselContext"
+import { CarouselContext, useCarousel, type CarouselApi, type CarouselOptions, type CarouselPlugin } from "./CarouselContext"
 import useEmblaCarousel from "embla-carousel-react"
 import { CarouselNext, CarouselPrevious } from "./CarouselNavigation"
 
