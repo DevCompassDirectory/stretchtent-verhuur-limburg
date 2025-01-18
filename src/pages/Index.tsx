@@ -62,7 +62,7 @@ const Home = () => {
             </div>
             <div className="relative aspect-square">
               <img
-                src="/lovable-uploads/9bc88df0-25e0-4756-b801-182895f8ef75.png"
+                src="/lovable-uploads/758626f0-c8d3-4cd8-97fe-3e57b0cb0cc6.png"
                 alt="Elegante stretchtent bruiloft setup met witte decoratie en lange tafels"
                 className="rounded-lg object-cover w-full h-full"
               />
