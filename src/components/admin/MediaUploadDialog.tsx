@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Upload } from "lucide-react";
 
 interface MediaUploadDialogProps {
   open: boolean;
@@ -17,16 +16,17 @@ export const MediaUploadDialog = ({
   onOpenChange,
   onSuccess,
 }: MediaUploadDialogProps) => {
-  const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
-  const handleUpload = async () => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
-    setIsUploading(true);
     try {
-      // First, check if a file with this name already exists
+      setIsUploading(true);
+
+      // Check if file with same name already exists in storage
       const { data: existingFiles } = await supabase.storage
         .from("images")
         .list();
@@ -35,20 +35,17 @@ export const MediaUploadDialog = ({
         (existingFile) => existingFile.name === file.name
       );
 
-      let publicUrl: string;
-
       if (fileExists) {
-        // If file exists, get its public URL
-        const { data: { publicUrl: existingUrl } } = supabase.storage
+        // Get the public URL of the existing file
+        const { data: { publicUrl } } = supabase.storage
           .from("images")
           .getPublicUrl(file.name);
-        publicUrl = existingUrl;
 
-        // Check if there's already an image record with this URL
+        // Check if we already have this image in our database
         const { data: existingImage } = await supabase
           .from("images")
           .select()
-          .eq('original_url', publicUrl)
+          .eq("original_url", publicUrl)
           .maybeSingle();
 
         if (existingImage) {
@@ -56,25 +53,43 @@ export const MediaUploadDialog = ({
             title: "Image already exists",
             description: "This image is already in your media library",
           });
-          setIsUploading(false);
           return;
         }
-      } else {
-        // Upload new file with original filename
-        const { error: uploadError } = await supabase.storage
-          .from("images")
-          .upload(file.name, file);
 
-        if (uploadError) throw uploadError;
+        // If the file exists in storage but not in the database,
+        // we'll create a new database entry for it
+        const { error: dbError } = await supabase.from("images").insert({
+          filename: file.name,
+          original_url: publicUrl,
+        });
 
-        // Get public URL for the uploaded file
-        const { data: { publicUrl: newUrl } } = supabase.storage
-          .from("images")
-          .getPublicUrl(file.name);
-        publicUrl = newUrl;
+        if (dbError) throw dbError;
+
+        toast({
+          title: "Success",
+          description: "Image added to library",
+        });
+        onSuccess();
+        onOpenChange(false);
+        return;
       }
 
-      // Save metadata to database
+      // Upload the file with its original name
+      const { error: uploadError } = await supabase.storage
+        .from("images")
+        .upload(file.name, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get the public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from("images")
+        .getPublicUrl(file.name);
+
+      // Save to database
       const { error: dbError } = await supabase.from("images").insert({
         filename: file.name,
         original_url: publicUrl,
@@ -86,6 +101,7 @@ export const MediaUploadDialog = ({
         title: "Success",
         description: "Image uploaded successfully",
       });
+
       onSuccess();
       onOpenChange(false);
     } catch (error) {
@@ -107,22 +123,27 @@ export const MediaUploadDialog = ({
           <DialogTitle>Upload Image</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="file">Select Image</Label>
-            <Input
-              id="file"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-            />
+          <div className="flex items-center justify-center w-full">
+            <label
+              htmlFor="file-upload"
+              className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary/70"
+            >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <Upload className="w-8 h-8 mb-4 text-muted-foreground" />
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Click to upload or drag and drop
+                </p>
+              </div>
+              <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileUpload}
+                disabled={isUploading}
+              />
+            </label>
           </div>
-          <Button
-            onClick={handleUpload}
-            disabled={!file || isUploading}
-            className="w-full"
-          >
-            {isUploading ? "Uploading..." : "Upload"}
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
