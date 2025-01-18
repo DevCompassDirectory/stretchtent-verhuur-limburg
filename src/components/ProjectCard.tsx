@@ -41,7 +41,7 @@ export const ProjectCard = ({
         </CardContent>
         <CardFooter className="mt-auto px-6 py-4 border-t bg-secondary/50 flex justify-between items-center">
           <time className="text-sm text-muted-foreground">{date}</time>
-          <Button variant="secondary" size="sm">
+          <Button variant="default" size="sm">
             Bekijk Project
           </Button>
         </CardFooter>
