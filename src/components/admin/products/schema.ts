@@ -1,4 +1,5 @@
 import * as z from "zod";
+import type { Json } from "@/integrations/supabase/types";
 
 export const productFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

@@ -43,7 +43,7 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
       product_type_id: product?.product_type_id || "",
       sort_order: product?.sort_order || 0,
       is_active: product?.is_active ?? true,
-      details: product?.details || {},
+      details: (product?.details || {}) as Record<string, any>,
     },
   });
 
@@ -107,7 +107,7 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
             .from("product_details")
             .upsert({
               product_id: product.id,
-              details: values.details,
+              details: values.details as Record<string, any>,
             });
 
           if (detailsError) throw detailsError;
@@ -137,7 +137,7 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
             .from("product_details")
             .insert({
               product_id: newProduct.id,
-              details: values.details,
+              details: values.details as Record<string, any>,
             });
 
           if (detailsError) throw detailsError;
