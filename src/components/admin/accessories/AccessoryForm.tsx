@@ -38,7 +38,7 @@ export const AccessoryForm = ({
       form.reset({
         name: "",
         slug: "",
-        type: "tent",
+        type: "deco",
         description: "",
         short_description: "",
         image: "",
