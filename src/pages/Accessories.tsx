@@ -1,56 +1,35 @@
 import { useAccessories } from "@/hooks/use-accessories";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { AccessoryCard } from "@/components/AccessoryCard";
 
 const Accessories = () => {
-  const { data: accessories, isLoading } = useAccessories();
-
-  if (isLoading) {
-    return (
-      <div className="pt-24 pb-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-96 bg-muted animate-pulse rounded-lg" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const { data: accessories, isLoading, error } = useAccessories();
 
   return (
     <div className="pt-24 pb-20">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Accessoires</h1>
+      <div className="container max-w-4xl mx-auto px-4">
+        <div className="text-center mb-16 fade-in">
+          <h1 className="text-4xl font-bold mb-4">Onze Accessoires</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Maak uw evenement compleet met onze premium accessoires
+            Ontdek ons assortiment premium accessoires om uw evenement compleet te maken
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {accessories?.map((accessory) => (
-            <Link key={accessory.id} to={`/accessoires/${accessory.slug}`}>
-              <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow">
-                <div className="aspect-square relative">
-                  <img
-                    src={accessory.image}
-                    alt={accessory.name}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <CardHeader>
-                  <CardTitle>{accessory.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    {accessory.short_description}
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="space-y-12">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-96 bg-muted animate-pulse rounded-lg" />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center text-destructive">
+            Er is een fout opgetreden bij het laden van de accessoires.
+          </div>
+        ) : (
+          <div className="space-y-12">
+            {accessories?.map((accessory) => (
+              <AccessoryCard key={accessory.id} accessory={accessory} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
