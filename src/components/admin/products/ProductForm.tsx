@@ -43,7 +43,7 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
       product_type_id: product?.product_type_id || "",
       sort_order: product?.sort_order || 0,
       is_active: product?.is_active ?? true,
-      details: (product?.details || {}) as Record<string, any>,
+      details: product?.details || {},
     },
   });
 
@@ -102,12 +102,12 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
 
         if (productError) throw productError;
 
-        if (values.details && Object.keys(values.details).length > 0) {
+        if (Object.keys(values.details).length > 0) {
           const { error: detailsError } = await supabase
             .from("product_details")
             .upsert({
               product_id: product.id,
-              details: values.details as Record<string, any>,
+              details: values.details,
             });
 
           if (detailsError) throw detailsError;
@@ -132,12 +132,12 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
 
         if (productError) throw productError;
 
-        if (values.details && Object.keys(values.details).length > 0) {
+        if (Object.keys(values.details).length > 0) {
           const { error: detailsError } = await supabase
             .from("product_details")
             .insert({
               product_id: newProduct.id,
-              details: values.details as Record<string, any>,
+              details: values.details,
             });
 
           if (detailsError) throw detailsError;

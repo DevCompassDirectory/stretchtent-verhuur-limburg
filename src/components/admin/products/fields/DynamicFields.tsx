@@ -36,24 +36,31 @@ export const DynamicFields = ({ schema }: DynamicFieldsProps) => {
           <FormItem>
             <FormLabel>{fieldSchema.label || fieldName}</FormLabel>
             <FormControl>
-              {type === "text" && <Input {...field} />}
-              {type === "textarea" && <Textarea {...field} />}
+              {type === "text" && (
+                <Input {...field} value={field.value || ""} />
+              )}
+              {type === "textarea" && (
+                <Textarea {...field} value={field.value || ""} />
+              )}
               {type === "number" && (
                 <Input
                   type="number"
                   {...field}
                   onChange={(e) => field.onChange(Number(e.target.value))}
+                  value={field.value || ""}
                 />
               )}
               {type === "boolean" && (
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <div className="pt-2">
+                  <Switch
+                    checked={field.value || false}
+                    onCheckedChange={field.onChange}
+                  />
+                </div>
               )}
               {type === "select" && (
                 <Select
-                  value={field.value}
+                  value={field.value || ""}
                   onValueChange={field.onChange}
                 >
                   <SelectTrigger>

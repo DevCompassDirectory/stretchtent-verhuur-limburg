@@ -1,6 +1,14 @@
 import * as z from "zod";
 import type { Json } from "@/integrations/supabase/types";
 
+const detailsSchema = z.record(z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.record(z.any()),
+  z.array(z.any())
+]));
+
 export const productFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   slug: z.string().min(2, "Slug must be at least 2 characters"),
@@ -10,7 +18,7 @@ export const productFormSchema = z.object({
   product_type_id: z.string().min(1, "Product type is required"),
   sort_order: z.number().int().min(0),
   is_active: z.boolean(),
-  details: z.record(z.any()).optional(),
+  details: detailsSchema,
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;
