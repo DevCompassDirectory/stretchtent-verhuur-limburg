@@ -3,6 +3,7 @@ export interface HomePageContent {
   hero_title: string;
   hero_subtitle: string;
   hero_image: string;
+  hero_image_alt: string | null;
   about_title: string;
   about_description: string;
   about_image: string;

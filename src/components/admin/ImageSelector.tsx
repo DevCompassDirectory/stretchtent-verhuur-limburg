@@ -4,6 +4,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface ImageSelectorProps {
   value: string;
@@ -12,6 +15,8 @@ interface ImageSelectorProps {
 
 export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [selectedSize, setSelectedSize] = useState<string>("original");
 
   const { data: images, isLoading } = useQuery({
     queryKey: ["storage-images"],
@@ -37,12 +42,37 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
   });
 
   const handleSelect = async (fileName: string) => {
-    const { data: { publicUrl } } = supabase.storage
+    const { data, error } = await supabase
       .from("images")
-      .getPublicUrl(fileName);
-    
-    onChange(publicUrl);
+      .select("*")
+      .eq("filename", fileName)
+      .single();
+
+    if (error) {
+      console.error("Error fetching image details:", error);
+      return;
+    }
+
+    setSelectedImage(data);
+    setSelectedSize("original"); // Reset size selection
+  };
+
+  const handleConfirm = () => {
+    if (!selectedImage) return;
+
+    let selectedUrl = selectedImage.original_url;
+    if (selectedSize === "thumbnail" && selectedImage.thumbnail_url) {
+      selectedUrl = selectedImage.thumbnail_url;
+    } else if (selectedSize === "medium" && selectedImage.medium_url) {
+      selectedUrl = selectedImage.medium_url;
+    } else if (selectedSize === "large" && selectedImage.large_url) {
+      selectedUrl = selectedImage.large_url;
+    }
+
+    onChange(selectedUrl);
     setIsOpen(false);
+    setSelectedImage(null);
+    setSelectedSize("original");
   };
 
   return (
@@ -71,25 +101,70 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
           <DialogHeader>
             <DialogTitle>Select Image</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-3 gap-4">
-            {isLoading ? (
-              <div>Loading images...</div>
-            ) : (
-              images?.map((file) => (
-                <button
-                  key={file.name}
-                  className="relative aspect-video overflow-hidden rounded-lg border hover:border-primary"
-                  onClick={() => handleSelect(file.name)}
+          <ScrollArea className="h-[500px] pr-4">
+            <div className="grid grid-cols-3 gap-4">
+              {isLoading ? (
+                <div>Loading images...</div>
+              ) : (
+                images?.map((file) => (
+                  <button
+                    key={file.name}
+                    className={`relative aspect-video overflow-hidden rounded-lg border transition-all ${
+                      selectedImage?.filename === file.name
+                        ? "border-primary ring-2 ring-primary ring-offset-2"
+                        : "hover:border-primary"
+                    }`}
+                    onClick={() => handleSelect(file.name)}
+                  >
+                    <img
+                      src={file.publicUrl}
+                      alt={file.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))
+              )}
+            </div>
+          </ScrollArea>
+
+          {selectedImage && (
+            <div className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label>Available Sizes</Label>
+                <RadioGroup
+                  value={selectedSize}
+                  onValueChange={setSelectedSize}
+                  className="flex gap-4"
                 >
-                  <img
-                    src={file.publicUrl}
-                    alt={file.name}
-                    className="h-full w-full object-cover"
-                  />
-                </button>
-              ))
-            )}
-          </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="original" id="original" />
+                    <Label htmlFor="original">Original</Label>
+                  </div>
+                  {selectedImage.thumbnail_url && (
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="thumbnail" id="thumbnail" />
+                      <Label htmlFor="thumbnail">Thumbnail</Label>
+                    </div>
+                  )}
+                  {selectedImage.medium_url && (
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="medium" id="medium" />
+                      <Label htmlFor="medium">Medium</Label>
+                    </div>
+                  )}
+                  {selectedImage.large_url && (
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="large" id="large" />
+                      <Label htmlFor="large">Large</Label>
+                    </div>
+                  )}
+                </RadioGroup>
+              </div>
+              <Button onClick={handleConfirm} className="w-full">
+                Confirm Selection
+              </Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

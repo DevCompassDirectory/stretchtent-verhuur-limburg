@@ -11,7 +11,7 @@ export const HeroSection = ({ content }: HeroSectionProps) => {
       <div className="absolute inset-0">
         <img
           src={content.hero_image}
-          alt="Elegante stretchtent bruiloft setup met witte decoratie en lange dinertafels"
+          alt={content.hero_image_alt || "Elegante stretchtent bruiloft setup met witte decoratie en lange dinertafels"}
           className="w-full h-full object-cover brightness-[0.7]"
         />
       </div>
