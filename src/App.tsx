@@ -19,6 +19,7 @@ import TentDetail from "./pages/TentDetail";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/dashboard/HomePage";
+import MediaPage from "./pages/dashboard/MediaPage";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
                 >
                   <Route index element={<div>Welcome to Dashboard</div>} />
                   <Route path="home" element={<HomePage />} />
+                  <Route path="media" element={<MediaPage />} />
                 </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />
