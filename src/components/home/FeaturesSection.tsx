@@ -1,13 +1,18 @@
 import { Shield, Clock, Umbrella, Users } from "lucide-react";
+import type { HomePageContent } from "@/types/home";
 
-export const FeaturesSection = () => {
+interface FeaturesSectionProps {
+  content: HomePageContent;
+}
+
+export const FeaturesSection = ({ content }: FeaturesSectionProps) => {
   return (
     <section className="py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Onze Voordelen</h2>
+          <h2 className="text-3xl font-bold mb-4">{content.features_title}</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Ontdek waarom steeds meer mensen kiezen voor onze stretchtenten
+            {content.features_subtitle}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

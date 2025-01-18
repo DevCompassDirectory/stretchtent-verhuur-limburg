@@ -1,13 +1,18 @@
 import { Card, CardContent } from "@/components/ui/card";
+import type { HomePageContent } from "@/types/home";
 
-export const TestimonialsSection = () => {
+interface TestimonialsSectionProps {
+  content: HomePageContent;
+}
+
+export const TestimonialsSection = ({ content }: TestimonialsSectionProps) => {
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Wat Onze Klanten Zeggen</h2>
+          <h2 className="text-3xl font-bold mb-4">{content.testimonials_title}</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Ervaringen van tevreden klanten die kozen voor onze stretchtenten
+            {content.testimonials_subtitle}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
