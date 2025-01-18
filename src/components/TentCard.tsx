@@ -12,7 +12,7 @@ interface TentCardProps {
 export const TentCard = ({ tent }: TentCardProps) => {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg group">
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-0">
         <div className="aspect-[4/3] overflow-hidden">
           <img
             src={tent.image}
