@@ -32,7 +32,7 @@ export const ProjectCard = ({
         </div>
         <CardContent className="flex-1 flex flex-col p-6">
           <div className="flex-1">
-            <Badge variant="secondary" className="mb-3">
+            <Badge variant="default" className="mb-3">
               {category}
             </Badge>
             <h3 className="text-xl font-semibold mb-2">{title}</h3>
