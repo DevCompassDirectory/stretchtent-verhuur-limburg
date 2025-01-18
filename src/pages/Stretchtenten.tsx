@@ -4,6 +4,11 @@ import { useTents } from "@/hooks/use-tents";
 const Stretchtenten = () => {
   const { data: tents, isLoading, error } = useTents();
 
+  // Sort tents by display_order
+  const sortedTents = tents?.sort((a, b) => 
+    (a.display_order || 0) - (b.display_order || 0)
+  );
+
   return (
     <div className="pt-24 pb-20">
       <div className="container max-w-4xl mx-auto px-4">
@@ -25,7 +30,7 @@ const Stretchtenten = () => {
           </div>
         ) : (
           <div className="space-y-12">
-            {tents?.map((tent) => (
+            {sortedTents?.map((tent) => (
               <TentCard key={tent.id} tent={tent} />
             ))}
           </div>
