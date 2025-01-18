@@ -120,38 +120,6 @@ export type Database = {
         }
         Relationships: []
       }
-      product_details: {
-        Row: {
-          created_at: string
-          details: Json
-          id: string
-          product_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          details: Json
-          id?: string
-          product_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          details?: Json
-          id?: string
-          product_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "product_details_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       product_images: {
         Row: {
           created_at: string
