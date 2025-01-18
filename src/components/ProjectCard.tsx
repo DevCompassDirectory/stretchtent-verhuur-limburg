@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface ProjectCardProps {
   id: string;
@@ -38,8 +39,11 @@ export const ProjectCard = ({
             <p className="text-muted-foreground line-clamp-2">{description}</p>
           </div>
         </CardContent>
-        <CardFooter className="mt-auto px-6 py-4 border-t bg-secondary/50">
+        <CardFooter className="mt-auto px-6 py-4 border-t bg-secondary/50 flex justify-between items-center">
           <time className="text-sm text-muted-foreground">{date}</time>
+          <Button variant="secondary" size="sm">
+            Bekijk Project
+          </Button>
         </CardFooter>
       </Card>
     </Link>
