@@ -18,9 +18,6 @@ import Stretchtenten from "./pages/Stretchtenten";
 import TentDetail from "./pages/TentDetail";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
-import Pages from "./pages/admin/Pages";
-import CreatePage from "./pages/admin/CreatePage";
-import EditPage from "./pages/admin/EditPage";
 
 const queryClient = new QueryClient();
 
@@ -44,12 +41,7 @@ const App = () => (
                       <Dashboard />
                     </ProtectedRoute>
                   }
-                >
-                  <Route index element={<div className="container py-6">Welcome to Dashboard</div>} />
-                  <Route path="pages" element={<Pages />} />
-                  <Route path="pages/create" element={<CreatePage />} />
-                  <Route path="pages/:id/edit" element={<EditPage />} />
-                </Route>
+                />
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/projects/:id" element={<ProjectDetail />} />
