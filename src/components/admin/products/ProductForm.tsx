@@ -76,7 +76,16 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
       if (product) {
         const { error } = await supabase
           .from("products")
-          .update(values)
+          .update({
+            name: values.name,
+            slug: values.slug,
+            description: values.description,
+            price: values.price,
+            category_id: values.category_id,
+            product_type_id: values.product_type_id,
+            sort_order: values.sort_order,
+            is_active: values.is_active,
+          })
           .eq("id", product.id);
 
         if (error) throw error;
@@ -84,7 +93,16 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
       } else {
         const { error } = await supabase
           .from("products")
-          .insert(values);
+          .insert({
+            name: values.name,
+            slug: values.slug,
+            description: values.description,
+            price: values.price,
+            category_id: values.category_id,
+            product_type_id: values.product_type_id,
+            sort_order: values.sort_order,
+            is_active: values.is_active,
+          });
 
         if (error) throw error;
         toast({ description: "Product created successfully" });
