@@ -4,12 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ProductForm } from "@/components/admin/products/ProductForm";
 import { ProductTable } from "@/components/admin/products/ProductTable";
 
@@ -40,25 +40,25 @@ const ProductsPage = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Products</h1>
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
               New Product
             </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
                 {editingProduct ? "Edit Product" : "New Product"}
-              </SheetTitle>
-            </SheetHeader>
+              </DialogTitle>
+            </DialogHeader>
             <ProductForm
               product={editingProduct}
               onSuccess={handleSuccess}
             />
-          </SheetContent>
-        </Sheet>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <ProductTable
