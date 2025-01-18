@@ -17,6 +17,21 @@ const ContactForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Get the honeypot field value
+    const honeypotValue = (e.target as HTMLFormElement).website.value;
+    
+    // If honeypot is filled, silently reject the submission
+    if (honeypotValue) {
+      console.log("Potential spam detected");
+      // Still show success message to avoid giving feedback to bots
+      toast({
+        title: "Bericht verzonden",
+        description: "We nemen zo spoedig mogelijk contact met u op.",
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
     
     // Simulate form submission
@@ -33,6 +48,18 @@ const ContactForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Honeypot field - hidden from users but visible to bots */}
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <label htmlFor="firstName" className="text-sm font-medium">
