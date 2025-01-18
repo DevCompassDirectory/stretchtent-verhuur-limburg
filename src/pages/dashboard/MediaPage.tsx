@@ -67,11 +67,12 @@ const MediaPage = () => {
         body: JSON.stringify({ imageId: id }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to resize image');
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to resize image');
       }
+
+      const data = await response.json();
 
       toast({
         title: "Success",
@@ -82,7 +83,7 @@ const MediaPage = () => {
       console.error("Error resizing image:", error);
       toast({
         title: "Error",
-        description: "Failed to resize image",
+        description: error.message || "Failed to resize image",
         variant: "destructive",
       });
     }
