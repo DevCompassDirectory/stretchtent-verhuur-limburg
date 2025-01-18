@@ -9,6 +9,45 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      accessories: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          image: string
+          name: string
+          short_description: string
+          slug: string
+          type: Database["public"]["Enums"]["product_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          image: string
+          name: string
+          short_description: string
+          slug: string
+          type: Database["public"]["Enums"]["product_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          image?: string
+          name?: string
+          short_description?: string
+          slug?: string
+          type?: Database["public"]["Enums"]["product_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       home_page_content: {
         Row: {
           about_description: string
