@@ -12,38 +12,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { NavLink } from "./nav/NavLink";
 import { UserAvatar } from "./nav/UserAvatar";
 import { MobileNav } from "./nav/MobileNav";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { session, signOut, isAdmin } = useAuth();
-
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      // First, get the "Huren" category
-      const { data: parentCategory } = await supabase
-        .from("rental_categories")
-        .select("id")
-        .eq("name", "Huren")
-        .single();
-
-      if (!parentCategory) return [];
-
-      // Then get all active categories with this parent
-      const { data, error } = await supabase
-        .from("rental_categories")
-        .select("*")
-        .eq("parent_id", parentCategory.id)
-        .eq("is_active", true)
-        .order("sort_order");
-      
-      if (error) throw error;
-      return data;
-    },
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,7 +42,7 @@ export const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <NavLink to="/">Home</NavLink>
             
-            {/* Categories Dropdown */}
+            {/* Huren Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
@@ -81,19 +54,14 @@ export const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
-                {categories?.map((category) => (
-                  <DropdownMenuItem key={category.id} asChild>
-                    <Link 
-                      to={`/stretchtenten/${category.slug}`}
-                      className="w-full"
-                    >
-                      {category.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
                 <DropdownMenuItem asChild>
-                  <Link to="/stretchtenten" className="w-full font-medium">
-                    Alle Stretchtenten
+                  <Link to="/stretchtenten" className="w-full">
+                    Stretchtenten
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/accessoires" className="w-full">
+                    Accessoires
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -137,7 +105,10 @@ export const Navbar = () => {
           isAdmin={isAdmin}
           signOut={signOut}
           onClose={() => setIsOpen(false)}
-          categories={categories}
+          categories={[
+            { id: '1', name: 'Stretchtenten', slug: 'stretchtenten' },
+            { id: '2', name: 'Accessoires', slug: 'accessoires' }
+          ]}
         />
       </div>
     </nav>
