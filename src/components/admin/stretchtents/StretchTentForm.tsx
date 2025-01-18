@@ -1,15 +1,13 @@
-import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { ImageSelector } from "@/components/admin/ImageSelector";
-import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { BasicInfoFields } from "./form/BasicInfoFields";
+import { SpecificationsFields } from "./form/SpecificationsFields";
+import { FeaturesFields } from "./form/FeaturesFields";
+import { useStretchTentForm } from "@/hooks/use-stretchtent-form";
 import type { Tent } from "@/types/tent";
-import { useEffect } from "react";
 
 interface StretchTentFormProps {
   tent: Tent | null;
@@ -18,121 +16,13 @@ interface StretchTentFormProps {
   onSuccess: () => void;
 }
 
-interface FormValues {
-  name: string;
-  slug: string;
-  size: string;
-  capacity: string;
-  description: string;
-  short_description: string;
-  features: string[];
-  image: string;
-  width: string;
-  length: string;
-  height: string;
-  area: string;
-  is_custom_config: boolean;
-}
-
 export const StretchTentForm = ({
   tent,
   open,
   onOpenChange,
   onSuccess,
 }: StretchTentFormProps) => {
-  const { toast } = useToast();
-  const form = useForm<FormValues>({
-    defaultValues: {
-      name: "",
-      slug: "",
-      size: "",
-      capacity: "",
-      description: "",
-      short_description: "",
-      features: [],
-      image: "",
-      width: "",
-      length: "",
-      height: "",
-      area: "",
-      is_custom_config: false,
-    },
-  });
-
-  // Reset form with tent data when editing
-  useEffect(() => {
-    if (tent) {
-      form.reset({
-        name: tent.name,
-        slug: tent.slug,
-        size: tent.size,
-        capacity: tent.capacity,
-        description: tent.description,
-        short_description: tent.short_description,
-        features: tent.features,
-        image: tent.image,
-        width: tent.width,
-        length: tent.length,
-        height: tent.height,
-        area: tent.area,
-        is_custom_config: tent.is_custom_config || false,
-      });
-    } else {
-      form.reset({
-        name: "",
-        slug: "",
-        size: "",
-        capacity: "",
-        description: "",
-        short_description: "",
-        features: [],
-        image: "",
-        width: "",
-        length: "",
-        height: "",
-        area: "",
-        is_custom_config: false,
-      });
-    }
-  }, [tent, form]);
-
-  const onSubmit = async (data: FormValues) => {
-    try {
-      if (tent) {
-        const { error } = await supabase
-          .from("stretchtents")
-          .update(data)
-          .eq("id", tent.id);
-
-        if (error) throw error;
-
-        toast({
-          title: "Success",
-          description: "Stretchtent updated successfully",
-        });
-      } else {
-        const { error } = await supabase
-          .from("stretchtents")
-          .insert([data]);
-
-        if (error) throw error;
-
-        toast({
-          title: "Success",
-          description: "Stretchtent created successfully",
-        });
-      }
-
-      onSuccess();
-    } catch (error) {
-      console.error("Error saving stretchtent:", error);
-      toast({
-        title: "Error",
-        description: "Failed to save stretchtent",
-        variant: "destructive",
-      });
-    }
-  };
+  const { form, onSubmit } = useStretchTentForm(tent, onSuccess, onOpenChange);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -143,186 +33,37 @@ export const StretchTentForm = ({
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="size"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Size</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="capacity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Capacity</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="short_description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Short Description</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="features"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Features (comma-separated)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      value={field.value?.join(", ") || ""}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value
-                            .split(",")
-                            .map((feature) => feature.trim())
-                            .filter(Boolean)
-                        )
-                      }
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <ImageSelector
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              <BasicInfoFields form={form} />
+              <SpecificationsFields form={form} />
+              <FeaturesFields form={form} />
               <FormField
                 control={form.control}
-                name="width"
+                name="image"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Width</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
+                  <ImageSelector
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 )}
               />
               <FormField
                 control={form.control}
-                name="length"
+                name="is_custom_config"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Length</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="height"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Height</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="area"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Area</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="is_custom_config"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel>Custom Configuration</FormLabel>
-                  </div>
-                  <FormControl>
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <DialogTitle>Custom Configuration</DialogTitle>
+                    </div>
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                  </div>
+                )}
+              />
+            </div>
             <Button type="submit" className="w-full">
               {tent ? "Save Changes" : "Create Stretchtent"}
             </Button>
