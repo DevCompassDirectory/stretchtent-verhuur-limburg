@@ -150,6 +150,7 @@ export type Database = {
           capacity: string
           created_at: string
           description: string
+          display_order: number
           features: string[]
           height: string
           id: string
@@ -168,6 +169,7 @@ export type Database = {
           capacity: string
           created_at?: string
           description: string
+          display_order?: number
           features: string[]
           height: string
           id?: string
@@ -186,6 +188,7 @@ export type Database = {
           capacity?: string
           created_at?: string
           description?: string
+          display_order?: number
           features?: string[]
           height?: string
           id?: string

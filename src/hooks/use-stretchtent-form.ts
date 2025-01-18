@@ -18,6 +18,7 @@ interface FormValues {
   height: string;
   area: string;
   is_custom_config: boolean;
+  display_order: number;
 }
 
 export const useStretchTentForm = (
@@ -41,6 +42,7 @@ export const useStretchTentForm = (
       height: "",
       area: "",
       is_custom_config: false,
+      display_order: 0,
     },
   });
 
@@ -60,6 +62,7 @@ export const useStretchTentForm = (
         height: tent.height,
         area: tent.area,
         is_custom_config: tent.is_custom_config || false,
+        display_order: tent.display_order || 0,
       });
     } else {
       form.reset({
@@ -76,6 +79,7 @@ export const useStretchTentForm = (
         height: "",
         area: "",
         is_custom_config: false,
+        display_order: 0,
       });
     }
   }, [tent, form]);

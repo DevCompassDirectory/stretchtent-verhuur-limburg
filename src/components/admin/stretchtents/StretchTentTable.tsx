@@ -65,11 +65,17 @@ export const StretchTentTable = ({
     }
   };
 
+  // Sort tents by display_order
+  const sortedTents = [...tents].sort((a, b) => 
+    (a.display_order || 0) - (b.display_order || 0)
+  );
+
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>Order</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Size</TableHead>
             <TableHead>Capacity</TableHead>
@@ -78,8 +84,9 @@ export const StretchTentTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tents.map((tent) => (
+          {sortedTents.map((tent) => (
             <TableRow key={tent.id}>
+              <TableCell>{tent.display_order}</TableCell>
               <TableCell>{tent.name}</TableCell>
               <TableCell>{tent.size}</TableCell>
               <TableCell>{tent.capacity}</TableCell>
