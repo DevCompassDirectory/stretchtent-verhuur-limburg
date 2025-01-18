@@ -3,18 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { ProductTypeSelector } from "@/components/admin/products/ProductTypeSelector";
-import { TentProductForm } from "@/components/admin/products/forms/TentProductForm";
-import { AccessoryProductForm } from "@/components/admin/products/forms/AccessoryProductForm";
-import { FurnitureProductForm } from "@/components/admin/products/forms/FurnitureProductForm";
-import { ServiceProductForm } from "@/components/admin/products/forms/ServiceProductForm";
 import { ProductTable } from "@/components/admin/products/ProductTable";
+import { ProductFormDialog } from "@/components/admin/products/ProductFormDialog";
 
 const ProductsPage = () => {
   const [isTypeSelectOpen, setIsTypeSelectOpen] = useState(false);
@@ -54,45 +45,6 @@ const ProductsPage = () => {
     setIsFormOpen(true);
   };
 
-  const renderProductForm = () => {
-    switch (selectedProductType) {
-      case "2529f53f-8a9c-412b-9176-4cc2dbdf02a5": // Stretchtent
-        return (
-          <TentProductForm
-            product={editingProduct}
-            onSuccess={handleSuccess}
-            productTypeId={selectedProductType}
-          />
-        );
-      case "f44a5b29-fca3-4fe3-b8d3-0c7e5d47674a": // Verlichting
-        return (
-          <AccessoryProductForm
-            product={editingProduct}
-            onSuccess={handleSuccess}
-            productTypeId={selectedProductType}
-          />
-        );
-      case "b36e2d83-45d4-483d-bd9a-fd0c9f92cdf5": // Meubilair
-        return (
-          <FurnitureProductForm
-            product={editingProduct}
-            onSuccess={handleSuccess}
-            productTypeId={selectedProductType}
-          />
-        );
-      case "a47497df-90b9-48f5-b3fa-281f77c4ef0a": // Vloer
-        return (
-          <ServiceProductForm
-            product={editingProduct}
-            onSuccess={handleSuccess}
-            productTypeId={selectedProductType}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -109,16 +61,13 @@ const ProductsPage = () => {
         onSelect={handleTypeSelect}
       />
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {editingProduct ? "Edit Product" : "New Product"}
-            </DialogTitle>
-          </DialogHeader>
-          {renderProductForm()}
-        </DialogContent>
-      </Dialog>
+      <ProductFormDialog
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        selectedProductType={selectedProductType}
+        editingProduct={editingProduct}
+        onSuccess={handleSuccess}
+      />
 
       <ProductTable
         products={products || []}
