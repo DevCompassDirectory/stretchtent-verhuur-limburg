@@ -12,6 +12,9 @@ interface ImageData {
   filename: string;
   alt_text: string | null;
   original_url: string;
+  thumbnail_url: string | null;
+  medium_url: string | null;
+  large_url: string | null;
 }
 
 interface MediaEditDialogProps {
@@ -46,54 +49,69 @@ export const MediaEditDialog = ({
     if (!image) return;
 
     try {
-      // Get the file extension from the original URL
-      const fileExt = image.original_url.split('.').pop();
-      const newFilePath = `${image.id}.${fileExt}`;
-      const oldFilePath = image.original_url.split('/').pop();
+      const updates: Record<string, any> = {
+        filename: data.filename,
+        alt_text: data.alt_text || null,
+      };
 
-      if (oldFilePath && data.filename !== image.filename) {
-        // Copy the file with the new name
-        const { error: copyError } = await supabase.storage
-          .from('images')
-          .copy(oldFilePath, newFilePath);
+      // If filename has changed, we need to update storage
+      if (data.filename !== image.filename) {
+        const fileUrls = [
+          { url: image.original_url, suffix: '' },
+          { url: image.thumbnail_url, suffix: '_thumbnail' },
+          { url: image.medium_url, suffix: '_medium' },
+          { url: image.large_url, suffix: '_large' }
+        ];
 
-        if (copyError) throw copyError;
+        // Process each file size
+        for (const { url, suffix } of fileUrls) {
+          if (!url) continue;
 
-        // Delete the old file
-        const { error: deleteError } = await supabase.storage
-          .from('images')
-          .remove([oldFilePath]);
+          const oldPath = url.split('/').pop();
+          if (!oldPath) continue;
 
-        if (deleteError) throw deleteError;
+          const fileExt = oldPath.split('.').pop();
+          const newPath = `${image.id}${suffix}.${fileExt}`;
 
-        // Get the new public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('images')
-          .getPublicUrl(newFilePath);
+          // Copy file with new name
+          const { error: copyError } = await supabase.storage
+            .from('images')
+            .copy(oldPath, newPath);
 
-        // Update the database record
-        const { error: updateError } = await supabase
-          .from("images")
-          .update({
-            filename: data.filename,
-            alt_text: data.alt_text || null,
-            original_url: publicUrl,
-          })
-          .eq("id", image.id);
+          if (copyError) {
+            console.error(`Error copying ${suffix || 'original'} file:`, copyError);
+            continue;
+          }
 
-        if (updateError) throw updateError;
-      } else {
-        // Just update the metadata if filename hasn't changed
-        const { error: updateError } = await supabase
-          .from("images")
-          .update({
-            filename: data.filename,
-            alt_text: data.alt_text || null,
-          })
-          .eq("id", image.id);
+          // Delete old file
+          const { error: deleteError } = await supabase.storage
+            .from('images')
+            .remove([oldPath]);
 
-        if (updateError) throw updateError;
+          if (deleteError) {
+            console.error(`Error deleting ${suffix || 'original'} file:`, deleteError);
+          }
+
+          // Get new public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('images')
+            .getPublicUrl(newPath);
+
+          // Update the corresponding URL in updates object
+          if (suffix === '') updates.original_url = publicUrl;
+          else if (suffix === '_thumbnail') updates.thumbnail_url = publicUrl;
+          else if (suffix === '_medium') updates.medium_url = publicUrl;
+          else if (suffix === '_large') updates.large_url = publicUrl;
+        }
       }
+
+      // Update database record
+      const { error: updateError } = await supabase
+        .from("images")
+        .update(updates)
+        .eq("id", image.id);
+
+      if (updateError) throw updateError;
 
       toast({
         title: "Success",
