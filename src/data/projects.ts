@@ -111,13 +111,13 @@ De verschillende tenten werden strategisch geplaatst om een natuurlijke flow ove
     fullDescription: `Voor het 50-jarig jubileum van een gerenommeerd bedrijf hebben we een elegante stretchtent opstelling gerealiseerd. De ruimte werd ingericht om zowel het formele gedeelte van de viering als het feestelijke avondprogramma te accommoderen.
 
 De tent werd voorzien van een podium voor speeches en presentaties, een uitgebreid buffet area en een ruime dansvloer. De inrichting weerspiegelde de professionaliteit van het bedrijf, terwijl de stretchtent zelf voor een unieke en moderne uitstraling zorgde.`,
-    image: "/lovable-uploads/758626f0-c8d3-4cd8-97fe-3e57b0cb0cc6.png",
+    image: "/lovable-uploads/3af388d3-afeb-4c98-9395-37692e3002e0.png",
     date: "12 September 2023",
     category: "Zakelijk",
     gallery: [
-      "/lovable-uploads/758626f0-c8d3-4cd8-97fe-3e57b0cb0cc6.png",
-      "/lovable-uploads/7ee4fd54-25f9-481e-a15d-b774fe108b8a.png",
-      "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png"
+      "/lovable-uploads/3af388d3-afeb-4c98-9395-37692e3002e0.png",
+      "/lovable-uploads/46c1ccce-6b21-4d68-910d-a0cf845c1594.png",
+      "/lovable-uploads/69e87368-8229-4425-bfe6-926b1b98030c.png"
     ],
     specs: {
       tentSize: "12 x 18 meter",
