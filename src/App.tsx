@@ -20,6 +20,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/dashboard/HomePage";
 import MediaPage from "./pages/dashboard/MediaPage";
+import CategoriesPage from "./pages/dashboard/CategoriesPage";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
                   <Route index element={<div>Welcome to Dashboard</div>} />
                   <Route path="home" element={<HomePage />} />
                   <Route path="media" element={<MediaPage />} />
+                  <Route path="categories" element={<CategoriesPage />} />
                 </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />
