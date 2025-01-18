@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { MediaUploadDialog } from "@/components/admin/MediaUploadDialog";
 import { MediaEditDialog } from "@/components/admin/MediaEditDialog";
 import { Image, Pencil, Trash2, Maximize2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ImageData {
   id: string;
@@ -22,6 +22,7 @@ interface ImageData {
 const MediaPage = () => {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [editingImage, setEditingImage] = useState<ImageData | null>(null);
+  const [processingImageId, setProcessingImageId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const { data: images, isLoading, refetch } = useQuery({
@@ -59,6 +60,12 @@ const MediaPage = () => {
 
   const handleResize = async (id: string) => {
     try {
+      setProcessingImageId(id);
+      toast({
+        title: "Processing",
+        description: "Generating image sizes...",
+      });
+
       const response = await fetch('/.netlify/functions/resize-image', {
         method: 'POST',
         headers: {
@@ -76,7 +83,7 @@ const MediaPage = () => {
 
       toast({
         title: "Success",
-        description: "Image resized successfully",
+        description: "Image sizes generated successfully",
       });
       refetch();
     } catch (error) {
@@ -86,6 +93,8 @@ const MediaPage = () => {
         description: error.message || "Failed to resize image",
         variant: "destructive",
       });
+    } finally {
+      setProcessingImageId(null);
     }
   };
 
@@ -150,8 +159,9 @@ const MediaPage = () => {
                       variant="outline"
                       size="icon"
                       onClick={() => handleResize(image.id)}
+                      disabled={processingImageId === image.id}
                     >
-                      <Maximize2 className="h-4 w-4" />
+                      <Maximize2 className={`h-4 w-4 ${processingImageId === image.id ? 'animate-spin' : ''}`} />
                     </Button>
                     <Button
                       variant="outline"
