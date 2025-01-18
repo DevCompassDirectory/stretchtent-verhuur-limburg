@@ -5,7 +5,7 @@ export const HeroSection = () => {
     <section className="relative h-screen">
       <div className="absolute inset-0">
         <img
-          src="/lovable-uploads/3af388d3-afeb-4c98-9395-37692e3002e0.png"
+          src="/lovable-uploads/707a77e0-8dde-45b1-92c8-5b2c5b5708f8.png"
           alt="Elegante stretchtent bruiloft setup met witte decoratie"
           className="w-full h-full object-cover"
         />
