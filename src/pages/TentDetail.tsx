@@ -36,7 +36,7 @@ const tents = [
       "Flexibele configuratie",
       "Waterafstotend materiaal"
     ],
-    image: "/photo-1482938289607-e9573fc25ebb",
+    image: "/lovable-uploads/3f4cfa7b-a0ef-46d8-897a-60b0cc061d60.png",
     specifications: {
       width: "10 meter",
       length: "15 meter",
@@ -56,7 +56,7 @@ const tents = [
       "Meerdere configuraties",
       "UV-bestendig"
     ],
-    image: "/photo-1469474968028-56623f02e42e",
+    image: "/lovable-uploads/7ee4fd54-25f9-481e-a15d-b774fe108b8a.png",
     specifications: {
       width: "15 meter",
       length: "20 meter",
@@ -76,7 +76,7 @@ const tents = [
       "Professioneel geluidssysteem mogelijk",
       "Inclusief noodverlichting"
     ],
-    image: "/photo-1470813740244-df37b8c1edcb",
+    image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
     specifications: {
       width: "20 meter",
       length: "30 meter",
@@ -102,7 +102,7 @@ const relatedProjects = {
       id: "1",
       title: "Bruiloft in Kasteel Hoensbroek",
       description: "Een elegante stretchtent setup voor een intieme bruiloft in de tuinen van Kasteel Hoensbroek.",
-      image: "/photo-1482938289607-e9573fc25ebb",
+      image: "/lovable-uploads/3f4cfa7b-a0ef-46d8-897a-60b0cc061d60.png",
       date: "15 Juni 2023",
       category: "Bruiloft"
     }
@@ -112,7 +112,7 @@ const relatedProjects = {
       id: "2",
       title: "Bedrijfsevenement Maastricht",
       description: "Grote stretchtent configuratie voor een corporate event met meer dan 200 gasten.",
-      image: "/photo-1509316975850-ff9c5deb0cd9",
+      image: "/lovable-uploads/7ee4fd54-25f9-481e-a15d-b774fe108b8a.png",
       date: "22 Juli 2023",
       category: "Zakelijk"
     }
@@ -122,7 +122,7 @@ const relatedProjects = {
       id: "4",
       title: "Festival in Roermond",
       description: "Meerdere stretchtenten voor een tweedaags muziekfestival.",
-      image: "/photo-1470813740244-df37b8c1edcb",
+      image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
       date: "5 September 2023",
       category: "Festival"
     }
