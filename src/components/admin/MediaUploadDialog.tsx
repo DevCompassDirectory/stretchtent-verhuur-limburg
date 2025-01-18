@@ -49,13 +49,14 @@ export const MediaUploadDialog = ({
           .from("images")
           .select()
           .eq('original_url', publicUrl)
-          .single();
+          .maybeSingle();
 
         if (existingImage) {
           toast({
             title: "Image already exists",
             description: "This image is already in your media library",
           });
+          setIsUploading(false);
           return;
         }
       } else {
