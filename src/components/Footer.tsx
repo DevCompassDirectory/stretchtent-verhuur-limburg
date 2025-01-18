@@ -45,12 +45,15 @@ export const Footer = () => {
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} StretchTent Limburg. Alle rechten voorbehouden.
             </p>
-            <div className="flex space-x-4 text-sm text-muted-foreground">
+            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
               <Link to="/privacy" className="hover:text-primary/80 transition-colors">
                 Privacy Policy
               </Link>
               <Link to="/algemene-voorwaarden" className="hover:text-primary/80 transition-colors">
                 Algemene Voorwaarden
+              </Link>
+              <Link to="/huurvoorwaarden" className="hover:text-primary/80 transition-colors">
+                Huurvoorwaarden
               </Link>
             </div>
           </div>
