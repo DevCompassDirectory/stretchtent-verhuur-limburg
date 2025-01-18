@@ -4,6 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Mail, Phone, MapPin } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -113,6 +120,24 @@ const Contact = () => {
                 type="tel"
                 className="w-full"
               />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="topic" className="text-sm font-medium">
+                Onderwerp
+              </label>
+              <Select name="topic" required>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecteer een onderwerp" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="offerte">Offerte aanvragen</SelectItem>
+                  <SelectItem value="informatie">Informatie over tenten</SelectItem>
+                  <SelectItem value="beschikbaarheid">Beschikbaarheid checken</SelectItem>
+                  <SelectItem value="samenwerking">Zakelijke samenwerking</SelectItem>
+                  <SelectItem value="anders">Anders</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
