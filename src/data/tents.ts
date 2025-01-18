@@ -3,10 +3,12 @@ import type { Tent } from "@/types/tent";
 export const tents: Tent[] = [
   {
     id: "extra-small",
+    slug: "extra-small",
     name: "Compact Mini Stretchtent",
     size: "7,5 x 10m",
     capacity: "Tot 50 personen",
     description: "Ideaal voor kleine bijeenkomsten en intieme feesten in de tuin.",
+    short_description: "Perfect voor kleine bijeenkomsten.",
     features: [
       "Ultra-compact design",
       "Snelle opzettijd",
@@ -14,6 +16,10 @@ export const tents: Tent[] = [
       "Perfect voor tuinfeesten"
     ],
     image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
+    width: "7,5 meter",
+    length: "10 meter",
+    height: "4 meter",
+    area: "75m²",
     specifications: {
       width: "7,5 meter",
       length: "10 meter",
@@ -23,10 +29,12 @@ export const tents: Tent[] = [
   },
   {
     id: "small",
+    slug: "small",
     name: "Compact Stretchtent",
     size: "10 x 15m",
     capacity: "Tot 100 personen",
     description: "Perfect voor kleinere evenementen zoals intieme bruiloften en tuinfeesten.",
+    short_description: "Ideaal voor kleinere evenementen.",
     features: [
       "Snelle opzettijd",
       "Compact design",
@@ -34,6 +42,10 @@ export const tents: Tent[] = [
       "Waterafstotend materiaal"
     ],
     image: "/lovable-uploads/3f4cfa7b-a0ef-46d8-897a-60b0cc061d60.png",
+    width: "10 meter",
+    length: "15 meter",
+    height: "4.5 meter",
+    area: "150m²",
     specifications: {
       width: "10 meter",
       length: "15 meter",
@@ -43,10 +55,12 @@ export const tents: Tent[] = [
   },
   {
     id: "medium",
+    slug: "medium",
     name: "Event Stretchtent",
     size: "15 x 20m",
     capacity: "Tot 200 personen",
     description: "Ideaal voor middelgrote evenementen zoals bedrijfsfeesten en grote bruiloften.",
+    short_description: "Perfect voor middelgrote evenementen.",
     features: [
       "Modulair systeem",
       "LED verlichting mogelijk",
@@ -54,6 +68,10 @@ export const tents: Tent[] = [
       "UV-bestendig"
     ],
     image: "/lovable-uploads/7ee4fd54-25f9-481e-a15d-b774fe108b8a.png",
+    width: "15 meter",
+    length: "20 meter",
+    height: "5 meter",
+    area: "300m²",
     specifications: {
       width: "15 meter",
       length: "20 meter",
@@ -63,10 +81,12 @@ export const tents: Tent[] = [
   },
   {
     id: "large",
+    slug: "large",
     name: "Festival Stretchtent",
     size: "20 x 30m",
     capacity: "Tot 400 personen",
     description: "De perfecte oplossing voor grote evenementen en festivals.",
+    short_description: "Ideaal voor grote evenementen en festivals.",
     features: [
       "Maximale flexibiliteit",
       "Geschikt voor alle weersomstandigheden",
@@ -74,6 +94,10 @@ export const tents: Tent[] = [
       "Inclusief noodverlichting"
     ],
     image: "/lovable-uploads/d4e76c7f-3ab7-43bb-9963-82f1a64fc9e6.png",
+    width: "20 meter",
+    length: "30 meter",
+    height: "6 meter",
+    area: "600m²",
     specifications: {
       width: "20 meter",
       length: "30 meter",
@@ -83,10 +107,12 @@ export const tents: Tent[] = [
   },
   {
     id: "custom",
+    slug: "custom",
     name: "Custom Stretchtent",
     size: "Op maat",
     capacity: "Onbeperkt",
     description: "Laat een stretchtent op maat maken voor uw specifieke wensen en eisen.",
+    short_description: "Volledig op maat gemaakte stretchtent oplossingen.",
     features: [
       "Volledig maatwerk",
       "Persoonlijk advies",
@@ -94,13 +120,17 @@ export const tents: Tent[] = [
       "Professionele begeleiding"
     ],
     image: "/lovable-uploads/69e87368-8229-4425-bfe6-926b1b98030c.png",
+    width: "Op maat",
+    length: "Op maat",
+    height: "Op maat",
+    area: "Op maat",
     specifications: {
       width: "Op maat",
       length: "Op maat",
       height: "Op maat",
       area: "Op maat"
     },
-    isCustomConfig: true
+    is_custom_config: true
   }
 ];
 
