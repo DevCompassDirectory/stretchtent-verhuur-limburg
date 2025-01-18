@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -11,8 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,10 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { productFormSchema } from "./schema";
 import type { ProductFormValues } from "./schema";
+import { BasicFields } from "./fields/BasicFields";
+import { DynamicFields } from "./fields/DynamicFields";
 
 interface ProductFormProps {
   product?: any;
@@ -43,6 +43,7 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
       product_type_id: product?.product_type_id || "",
       sort_order: product?.sort_order || 0,
       is_active: product?.is_active ?? true,
+      details: product?.details || {},
     },
   });
 
@@ -71,15 +72,21 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
     },
   });
 
-  // Get the selected product type's form schema
   const selectedProductType = productTypes?.find(
     (type) => type.id === form.watch("product_type_id")
   );
 
+  useEffect(() => {
+    if (selectedProductType?.form_schema) {
+      // Reset details when product type changes
+      form.setValue("details", {});
+    }
+  }, [form.watch("product_type_id")]);
+
   const onSubmit = async (values: ProductFormValues) => {
     try {
       if (product) {
-        const { error } = await supabase
+        const { error: productError } = await supabase
           .from("products")
           .update({
             name: values.name,
@@ -93,10 +100,22 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
           })
           .eq("id", product.id);
 
-        if (error) throw error;
+        if (productError) throw productError;
+
+        if (values.details && Object.keys(values.details).length > 0) {
+          const { error: detailsError } = await supabase
+            .from("product_details")
+            .upsert({
+              product_id: product.id,
+              details: values.details,
+            });
+
+          if (detailsError) throw detailsError;
+        }
+
         toast({ description: "Product updated successfully" });
       } else {
-        const { error } = await supabase
+        const { data: newProduct, error: productError } = await supabase
           .from("products")
           .insert({
             name: values.name,
@@ -107,9 +126,23 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
             product_type_id: values.product_type_id,
             sort_order: values.sort_order,
             is_active: values.is_active,
-          });
+          })
+          .select()
+          .single();
 
-        if (error) throw error;
+        if (productError) throw productError;
+
+        if (values.details && Object.keys(values.details).length > 0) {
+          const { error: detailsError } = await supabase
+            .from("product_details")
+            .insert({
+              product_id: newProduct.id,
+              details: values.details,
+            });
+
+          if (detailsError) throw detailsError;
+        }
+
         toast({ description: "Product created successfully" });
       }
       onSuccess();
@@ -152,129 +185,14 @@ export const ProductForm = ({ product, onSuccess }: ProductFormProps) => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Slug</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input type="number" step="0.01" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="category_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {categories?.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <BasicFields categories={categories || []} />
 
         {selectedProductType?.form_schema && (
           <div className="space-y-4 border-t pt-4">
             <h3 className="font-medium">Product Type Details</h3>
-            {/* Here we would render dynamic form fields based on the form_schema */}
-            {/* This is a placeholder for the dynamic fields implementation */}
+            <DynamicFields schema={selectedProductType.form_schema} />
           </div>
         )}
-
-        <FormField
-          control={form.control}
-          name="sort_order"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sort Order</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="is_active"
-          render={({ field }) => (
-            <FormItem className="flex items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel>Active</FormLabel>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
 
         <Button type="submit" className="w-full">
           {product ? "Update" : "Create"} Product

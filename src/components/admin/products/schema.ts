@@ -9,6 +9,7 @@ export const productFormSchema = z.object({
   product_type_id: z.string().min(1, "Product type is required"),
   sort_order: z.number().int().min(0),
   is_active: z.boolean(),
+  details: z.record(z.any()).optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;
