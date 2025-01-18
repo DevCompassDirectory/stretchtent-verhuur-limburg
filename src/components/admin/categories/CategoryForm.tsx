@@ -155,7 +155,7 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
               <FormLabel>Parent Category</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                value={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -163,7 +163,7 @@ export const CategoryForm = ({ category, categories, onSuccess }: CategoryFormPr
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="null">None</SelectItem>
                   {categories?.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name}
