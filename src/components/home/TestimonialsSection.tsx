@@ -40,11 +40,11 @@ interface TestimonialCardProps {
 
 const TestimonialCard = ({ quote, author, event }: TestimonialCardProps) => {
   return (
-    <Card className="animate-fade-up">
-      <CardContent className="pt-6">
-        <div className="space-y-4">
-          <p className="text-lg italic">{quote}</p>
-          <div>
+    <Card className="animate-fade-up h-full">
+      <CardContent className="pt-6 flex flex-col h-full">
+        <div className="flex flex-col justify-between h-full">
+          <p className="text-lg italic mb-6">{quote}</p>
+          <div className="mt-auto">
             <p className="font-semibold">{author}</p>
             <p className="text-sm text-muted-foreground">{event}</p>
           </div>
