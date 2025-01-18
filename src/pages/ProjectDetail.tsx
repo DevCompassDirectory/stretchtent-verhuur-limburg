@@ -1,20 +1,11 @@
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Tag, X } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { projects } from "@/data/projects";
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-} from "@/components/ui/dialog";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { useState } from "react";
+import { ProjectInfo } from "@/components/project/ProjectInfo";
+import { ProjectGallery } from "@/components/project/ProjectGallery";
+import { ProjectImageCarousel } from "@/components/project/ProjectImageCarousel";
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -48,106 +39,19 @@ const ProjectDetail = () => {
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-[400px] object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-              onClick={() => setSelectedImageIndex(0)}
-            />
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              {project.gallery.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`${project.title} - foto ${index + 1}`}
-                  className="w-full aspect-square object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                  onClick={() => setSelectedImageIndex(index + 1)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-4xl font-bold mb-4">{project.title}</h1>
-              <div className="flex items-center gap-4 text-muted-foreground">
-                <span className="flex items-center gap-2">
-                  <Calendar size={16} />
-                  {project.date}
-                </span>
-                <span className="flex items-center gap-2">
-                  <Tag size={16} />
-                  {project.category}
-                </span>
-              </div>
-            </div>
-
-            <div className="prose prose-gray max-w-none">
-              {project.fullDescription.split("\n\n").map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold">Specificaties</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Tent Afmeting</p>
-                  <p className="font-medium">{project.specs.tentSize}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Capaciteit</p>
-                  <p className="font-medium">{project.specs.capacity}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Setup</p>
-                  <p className="font-medium">{project.specs.setup}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Locatie</p>
-                  <p className="font-medium">{project.specs.location}</p>
-                </div>
-              </div>
-            </div>
-
-            <Button size="lg" asChild>
-              <Link to="/contact">Offerte Aanvragen</Link>
-            </Button>
-          </div>
+          <ProjectGallery 
+            project={project} 
+            onImageClick={setSelectedImageIndex} 
+          />
+          <ProjectInfo project={project} />
         </div>
 
-        <Dialog open={selectedImageIndex !== null} onOpenChange={() => setSelectedImageIndex(null)}>
-          <DialogContent className="max-w-[95vw] max-h-[95vh] w-full h-full p-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-50">
-              <X className="h-6 w-6" />
-              <span className="sr-only">Close</span>
-            </DialogClose>
-            
-            <div className="relative w-full h-full flex items-center justify-center p-6">
-              <Carousel 
-                className="w-full h-full" 
-                opts={{
-                  startIndex: selectedImageIndex || 0,
-                }}
-              >
-                <CarouselContent className="h-full">
-                  {allImages.map((image, index) => (
-                    <CarouselItem key={index} className="h-full flex items-center justify-center">
-                      <img
-                        src={image}
-                        alt={`${project.title} - foto ${index + 1}`}
-                        className="max-w-full max-h-[80vh] object-contain rounded-lg"
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-2" />
-                <CarouselNext className="right-2" />
-              </Carousel>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <ProjectImageCarousel
+          project={project}
+          selectedImageIndex={selectedImageIndex}
+          onClose={() => setSelectedImageIndex(null)}
+          allImages={allImages}
+        />
       </div>
     </div>
   );
