@@ -21,40 +21,18 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
   const { data: images, isLoading } = useQuery({
     queryKey: ["storage-images"],
     queryFn: async () => {
-      const { data: files, error } = await supabase.storage
+      const { data: files, error } = await supabase
         .from("images")
-        .list();
+        .select("*");
 
       if (error) throw error;
-
-      // Get public URLs for all images
-      const filesWithUrls = await Promise.all(
-        files.map(async (file) => {
-          const { data: { publicUrl } } = supabase.storage
-            .from("images")
-            .getPublicUrl(file.name);
-          return { ...file, publicUrl };
-        })
-      );
-
-      return filesWithUrls;
+      return files;
     },
   });
 
-  const handleSelect = async (fileName: string) => {
-    const { data, error } = await supabase
-      .from("images")
-      .select("*")
-      .eq("filename", fileName)
-      .single();
-
-    if (error) {
-      console.error("Error fetching image details:", error);
-      return;
-    }
-
-    setSelectedImage(data);
-    setSelectedSize("original"); // Reset size selection
+  const handleSelect = (image: any) => {
+    setSelectedImage(image);
+    setSelectedSize("original"); // Reset size selection when new image is selected
   };
 
   const handleConfirm = () => {
@@ -101,70 +79,73 @@ export const ImageSelector = ({ value, onChange }: ImageSelectorProps) => {
           <DialogHeader>
             <DialogTitle>Select Image</DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-[500px] pr-4">
-            <div className="grid grid-cols-3 gap-4">
-              {isLoading ? (
-                <div>Loading images...</div>
-              ) : (
-                images?.map((file) => (
-                  <button
-                    key={file.name}
-                    className={`relative aspect-video overflow-hidden rounded-lg border transition-all ${
-                      selectedImage?.filename === file.name
-                        ? "border-primary ring-2 ring-primary ring-offset-2"
-                        : "hover:border-primary"
-                    }`}
-                    onClick={() => handleSelect(file.name)}
-                  >
-                    <img
-                      src={file.publicUrl}
-                      alt={file.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                ))
-              )}
-            </div>
-          </ScrollArea>
-
-          {selectedImage && (
-            <div className="space-y-4 mt-4">
-              <div className="space-y-2">
-                <Label>Available Sizes</Label>
-                <RadioGroup
-                  value={selectedSize}
-                  onValueChange={setSelectedSize}
-                  className="flex gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="original" id="original" />
-                    <Label htmlFor="original">Original</Label>
-                  </div>
-                  {selectedImage.thumbnail_url && (
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="thumbnail" id="thumbnail" />
-                      <Label htmlFor="thumbnail">Thumbnail</Label>
-                    </div>
-                  )}
-                  {selectedImage.medium_url && (
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="medium" id="medium" />
-                      <Label htmlFor="medium">Medium</Label>
-                    </div>
-                  )}
-                  {selectedImage.large_url && (
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="large" id="large" />
-                      <Label htmlFor="large">Large</Label>
-                    </div>
-                  )}
-                </RadioGroup>
+          
+          <div className="flex flex-col space-y-4">
+            <ScrollArea className="h-[500px] pr-4">
+              <div className="grid grid-cols-3 gap-4">
+                {isLoading ? (
+                  <div>Loading images...</div>
+                ) : (
+                  images?.map((image) => (
+                    <button
+                      key={image.filename}
+                      className={`relative aspect-video overflow-hidden rounded-lg border transition-all ${
+                        selectedImage?.id === image.id
+                          ? "border-primary ring-2 ring-primary ring-offset-2"
+                          : "hover:border-primary"
+                      }`}
+                      onClick={() => handleSelect(image)}
+                    >
+                      <img
+                        src={image.original_url}
+                        alt={image.alt_text || image.filename}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))
+                )}
               </div>
-              <Button onClick={handleConfirm} className="w-full">
-                Confirm Selection
-              </Button>
-            </div>
-          )}
+            </ScrollArea>
+
+            {selectedImage && (
+              <div className="space-y-4 border-t pt-4">
+                <div className="space-y-2">
+                  <Label>Available Sizes</Label>
+                  <RadioGroup
+                    value={selectedSize}
+                    onValueChange={setSelectedSize}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="original" id="original" />
+                      <Label htmlFor="original">Original</Label>
+                    </div>
+                    {selectedImage.thumbnail_url && (
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="thumbnail" id="thumbnail" />
+                        <Label htmlFor="thumbnail">Thumbnail</Label>
+                      </div>
+                    )}
+                    {selectedImage.medium_url && (
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="medium" id="medium" />
+                        <Label htmlFor="medium">Medium</Label>
+                      </div>
+                    )}
+                    {selectedImage.large_url && (
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="large" id="large" />
+                        <Label htmlFor="large">Large</Label>
+                      </div>
+                    )}
+                  </RadioGroup>
+                </div>
+                <Button onClick={handleConfirm} className="w-full">
+                  Confirm Selection
+                </Button>
+              </div>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>
