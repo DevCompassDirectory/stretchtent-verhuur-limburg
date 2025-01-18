@@ -1,11 +1,18 @@
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, Tag, X } from "lucide-react";
 import { projects } from "@/data/projects";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 const ProjectDetail = () => {
   const { id } = useParams();
-  const project = projects.find(p => p.id === id);
+  const project = projects.find((p) => p.id === id);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   if (!project) {
     return (
@@ -35,7 +42,8 @@ const ProjectDetail = () => {
             <img
               src={project.image}
               alt={project.title}
-              className="w-full h-[400px] object-cover rounded-lg"
+              className="w-full h-[400px] object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => setSelectedImage(project.image)}
             />
             <div className="grid grid-cols-3 gap-4 mt-4">
               {project.gallery.map((image, index) => (
@@ -43,7 +51,8 @@ const ProjectDetail = () => {
                   key={index}
                   src={image}
                   alt={`${project.title} - foto ${index + 1}`}
-                  className="w-full aspect-square object-cover rounded-lg"
+                  className="w-full aspect-square object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setSelectedImage(image)}
                 />
               ))}
             </div>
@@ -65,7 +74,7 @@ const ProjectDetail = () => {
             </div>
 
             <div className="prose prose-gray max-w-none">
-              {project.fullDescription.split('\n\n').map((paragraph, index) => (
+              {project.fullDescription.split("\n\n").map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
               ))}
             </div>
@@ -97,6 +106,22 @@ const ProjectDetail = () => {
             </Button>
           </div>
         </div>
+
+        <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+          <DialogContent className="max-w-[90vw] w-fit p-0 bg-transparent border-0">
+            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-50">
+              <X className="h-6 w-6 text-white" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                alt="Full size view"
+                className="w-auto max-w-[90vw] max-h-[90vh] rounded-lg"
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
