@@ -1,4 +1,4 @@
-import { LayoutDashboard, Home, Image, Tent } from "lucide-react";
+import { LayoutDashboard, Home, Image, Tent, Package } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import {
   Sheet,
@@ -29,6 +29,11 @@ const menuItems = [
     title: "Stretchtents",
     icon: Tent,
     path: "/dashboard/stretchtents",
+  },
+  {
+    title: "Accessories",
+    icon: Package,
+    path: "/dashboard/accessories",
   },
 ];
 
