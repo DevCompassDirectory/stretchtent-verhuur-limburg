@@ -26,20 +26,52 @@ export const MediaUploadDialog = ({
 
     setIsUploading(true);
     try {
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${crypto.randomUUID()}.${fileExt}`;
-
-      // Upload file to storage
-      const { error: uploadError } = await supabase.storage
+      // First, check if a file with this name already exists
+      const { data: existingFiles } = await supabase.storage
         .from("images")
-        .upload(filePath, file);
+        .list();
 
-      if (uploadError) throw uploadError;
+      const fileExists = existingFiles?.some(
+        (existingFile) => existingFile.name === file.name
+      );
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from("images")
-        .getPublicUrl(filePath);
+      let publicUrl: string;
+
+      if (fileExists) {
+        // If file exists, get its public URL
+        const { data: { publicUrl: existingUrl } } = supabase.storage
+          .from("images")
+          .getPublicUrl(file.name);
+        publicUrl = existingUrl;
+
+        // Check if there's already an image record with this URL
+        const { data: existingImage } = await supabase
+          .from("images")
+          .select()
+          .eq('original_url', publicUrl)
+          .single();
+
+        if (existingImage) {
+          toast({
+            title: "Image already exists",
+            description: "This image is already in your media library",
+          });
+          return;
+        }
+      } else {
+        // Upload new file with original filename
+        const { error: uploadError } = await supabase.storage
+          .from("images")
+          .upload(file.name, file);
+
+        if (uploadError) throw uploadError;
+
+        // Get public URL for the uploaded file
+        const { data: { publicUrl: newUrl } } = supabase.storage
+          .from("images")
+          .getPublicUrl(file.name);
+        publicUrl = newUrl;
+      }
 
       // Save metadata to database
       const { error: dbError } = await supabase.from("images").insert({
@@ -54,6 +86,7 @@ export const MediaUploadDialog = ({
         description: "Image uploaded successfully",
       });
       onSuccess();
+      onOpenChange(false);
     } catch (error) {
       console.error("Error uploading image:", error);
       toast({
