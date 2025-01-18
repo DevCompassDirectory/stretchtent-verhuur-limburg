@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { ProjectCard } from "@/components/ProjectCard";
 
 export const ProjectsSection = () => {
   return (
@@ -12,6 +13,7 @@ export const ProjectsSection = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <ProjectCard
+            id="1"
             image="/photo-1482938289607-e9573fc25ebb"
             title="Bruiloft in Kasteel Hoensbroek"
             description="Een elegante stretchtent setup voor een intieme bruiloft in de tuinen van Kasteel Hoensbroek."
@@ -19,6 +21,7 @@ export const ProjectsSection = () => {
             category="Bruiloft"
           />
           <ProjectCard
+            id="2"
             image="/photo-1509316975850-ff9c5deb0cd9"
             title="Bedrijfsevenement Maastricht"
             description="Grote stretchtent configuratie voor een corporate event met meer dan 200 gasten."
@@ -26,6 +29,7 @@ export const ProjectsSection = () => {
             category="Zakelijk"
           />
           <ProjectCard
+            id="3"
             image="/photo-1513836279014-a89f7a76ae86"
             title="Tuinfeest in Valkenburg"
             description="Gezellige stretchtent opstelling voor een privé tuinfeest met live muziek."
@@ -40,33 +44,5 @@ export const ProjectsSection = () => {
         </div>
       </div>
     </section>
-  );
-};
-
-interface ProjectCardProps {
-  image: string;
-  title: string;
-  description: string;
-  date: string;
-  category: string;
-}
-
-const ProjectCard = ({ image, title, description, date, category }: ProjectCardProps) => {
-  return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-lg">
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-48 object-cover"
-      />
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-muted-foreground">{description}</p>
-        <div className="mt-4 flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">{date}</span>
-          <span className="text-sm font-medium">{category}</span>
-        </div>
-      </div>
-    </div>
   );
 };
