@@ -78,6 +78,42 @@ export type Database = {
         }
         Relationships: []
       }
+      images: {
+        Row: {
+          alt_text: string | null
+          created_at: string
+          filename: string
+          id: string
+          large_url: string | null
+          medium_url: string | null
+          original_url: string
+          thumbnail_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string
+          filename: string
+          id?: string
+          large_url?: string | null
+          medium_url?: string | null
+          original_url: string
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string
+          filename?: string
+          id?: string
+          large_url?: string | null
+          medium_url?: string | null
+          original_url?: string
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
