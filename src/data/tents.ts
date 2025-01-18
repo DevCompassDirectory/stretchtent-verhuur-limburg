@@ -80,6 +80,27 @@ export const tents: Tent[] = [
       height: "6 meter",
       area: "600m²"
     }
+  },
+  {
+    id: "custom",
+    name: "Custom Stretchtent",
+    size: "Op maat",
+    capacity: "Onbeperkt",
+    description: "Laat een stretchtent op maat maken voor uw specifieke wensen en eisen.",
+    features: [
+      "Volledig maatwerk",
+      "Persoonlijk advies",
+      "Flexibele opties",
+      "Professionele begeleiding"
+    ],
+    image: "/lovable-uploads/69e87368-8229-4425-bfe6-926b1b98030c.png",
+    specifications: {
+      width: "Op maat",
+      length: "Op maat",
+      height: "Op maat",
+      area: "Op maat"
+    },
+    isCustomConfig: true
   }
 ];
 
