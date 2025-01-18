@@ -21,6 +21,7 @@ import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/dashboard/HomePage";
 import MediaPage from "./pages/dashboard/MediaPage";
 import CategoriesPage from "./pages/dashboard/CategoriesPage";
+import ProductsPage from "./pages/dashboard/ProductsPage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
                   <Route path="home" element={<HomePage />} />
                   <Route path="media" element={<MediaPage />} />
                   <Route path="categories" element={<CategoriesPage />} />
+                  <Route path="products" element={<ProductsPage />} />
                 </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />

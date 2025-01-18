@@ -1,4 +1,4 @@
-import { LayoutDashboard, Home, Image, FolderTree } from "lucide-react";
+import { LayoutDashboard, Home, Image, FolderTree, Package } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import {
   Sheet,
@@ -29,6 +29,11 @@ const menuItems = [
     title: "Categories",
     icon: FolderTree,
     path: "/dashboard/categories",
+  },
+  {
+    title: "Products",
+    icon: Package,
+    path: "/dashboard/products",
   },
 ];
 
