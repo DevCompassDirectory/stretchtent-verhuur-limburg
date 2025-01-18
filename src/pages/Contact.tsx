@@ -59,7 +59,7 @@ const Contact = () => {
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="text-primary" size={20} />
-                <span>Maastricht, Limburg</span>
+                <span>Heerlen, Limburg</span>
               </div>
             </div>
           </div>
