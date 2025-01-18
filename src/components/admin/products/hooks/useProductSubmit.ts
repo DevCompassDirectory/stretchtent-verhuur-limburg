@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import type { ProductFormValues } from "../schema";
+import type { Json } from "@/integrations/supabase/types";
 
 export const useProductSubmit = (onSuccess: () => void) => {
   const { toast } = useToast();
@@ -29,7 +30,7 @@ export const useProductSubmit = (onSuccess: () => void) => {
             .from("product_details")
             .upsert({
               product_id: productId,
-              details: values.details,
+              details: values.details as Json,
             });
 
           if (detailsError) throw detailsError;
@@ -59,7 +60,7 @@ export const useProductSubmit = (onSuccess: () => void) => {
             .from("product_details")
             .insert({
               product_id: newProduct.id,
-              details: values.details,
+              details: values.details as Json,
             });
 
           if (detailsError) throw detailsError;

@@ -7,9 +7,9 @@ export const detailsSchema = z.record(z.union([
   z.number(),
   z.boolean(),
   z.null(),
-  z.record(z.unknown()),
-  z.array(z.unknown())
-]));
+  z.array(z.unknown()),
+  z.record(z.unknown())
+])).transform((val): Json => val as Json);
 
 export const productFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
