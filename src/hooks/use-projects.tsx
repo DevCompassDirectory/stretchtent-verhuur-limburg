@@ -55,6 +55,9 @@ export const useProject = (id: string) => {
   return useQuery({
     queryKey: ["project", id],
     queryFn: async () => {
+      // Skip the query if id is empty
+      if (!id) return null;
+
       const { data, error } = await supabase
         .from("projects")
         .select(`
@@ -75,5 +78,7 @@ export const useProject = (id: string) => {
 
       return project;
     },
+    // Disable the query when id is empty
+    enabled: Boolean(id),
   });
 };
