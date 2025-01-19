@@ -1,4 +1,4 @@
-import { BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { BlockNoteViewRaw, useBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
 
@@ -6,15 +6,6 @@ interface LegalPageEditorProps {
   initialContent: any[];
   onSave: (content: any[]) => void;
 }
-
-// Define the PartialBlock type as per BlockNote documentation
-type PartialBlock = {
-  id?: string;
-  type?: string;
-  props?: Partial<Record<string, any>>;
-  content?: string | Array<{ type: string; text: string; }>;
-  children?: PartialBlock[];
-};
 
 export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps) {
   // Default content for when initialContent is invalid or empty
@@ -30,35 +21,30 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
     },
   ];
 
-  // Validate if a block matches the PartialBlock structure
-  const validateBlock = (block: any): block is PartialBlock => {
-    if (!block || typeof block !== 'object') return false;
-    if (block.type && typeof block.type !== 'string') return false;
-    if (block.content && !Array.isArray(block.content) && typeof block.content !== 'string') return false;
-    if (block.children && !Array.isArray(block.children)) return false;
-    return true;
-  };
+  // Transform and validate the content
+  const processContent = (content: any[]): PartialBlock[] => {
+    if (!Array.isArray(content)) return defaultContent;
 
-  // Transform the content to ensure it matches PartialBlock structure
-  const transformContent = (content: any[]): PartialBlock[] => {
     try {
-      return content.filter(validateBlock).map(block => ({
-        ...block,
-        content: Array.isArray(block.content) ? block.content : [{ type: "text", text: String(block.content || "") }],
+      return content.map(block => ({
+        type: "paragraph",
+        content: Array.isArray(block.content) 
+          ? block.content.map(item => ({
+              type: "text",
+              text: String(item.text || ""),
+            }))
+          : [{ type: "text", text: String(block.content || "") }],
       }));
     } catch (error) {
-      console.error("Error transforming content:", error);
+      console.error("Error processing content:", error);
       return defaultContent;
     }
   };
 
-  // Process the initial content
-  const processedContent = Array.isArray(initialContent) && initialContent.length > 0
-    ? transformContent(initialContent)
-    : defaultContent;
-
   const editor: BlockNoteEditor = useBlockNote({
-    initialContent: processedContent,
+    initialContent: initialContent && initialContent.length > 0 
+      ? processContent(initialContent)
+      : defaultContent,
   });
 
   return (
