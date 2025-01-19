@@ -23,11 +23,11 @@ export const FooterForm = ({ footerData, onSuccess }: FooterFormProps) => {
   const { toast } = useToast();
   const form = useForm<FooterFormValues>({
     defaultValues: {
-      title: "",
-      description: "",
-      phone: "",
-      email: "",
-      address: "",
+      title: footerData?.title || "",
+      description: footerData?.description || "",
+      phone: footerData?.phone || "",
+      email: footerData?.email || "",
+      address: footerData?.address || "",
     },
   });
 
