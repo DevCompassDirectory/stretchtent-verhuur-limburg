@@ -29,7 +29,10 @@ export function LegalPageEditor({
 
 	// Transform and validate the content
 	const processContent = (content: any[]): PartialBlock[] => {
-		if (!Array.isArray(content)) return defaultContent;
+		if (!content || !Array.isArray(content)) {
+			console.warn('Invalid content format, using default content');
+			return defaultContent;
+		}
 
 		try {
 			return content.map((block) => {
@@ -38,27 +41,45 @@ export function LegalPageEditor({
 					return defaultContent[0];
 				}
 
-				return {
-					type: 'paragraph',
-					content: Array.isArray(block.content)
-						? block.content.map((item) => ({
+				// Validate and process block content
+				const processedContent = Array.isArray(block.content)
+					? block.content.map((item: any) => ({
+							type: 'text',
+							text:
+								typeof item?.text === 'string' ? item.text : '',
+							styles:
+								typeof item?.styles === 'object'
+									? item.styles
+									: {},
+					  }))
+					: [
+							{
 								type: 'text',
-								text:
-									typeof item?.text === 'string'
-										? item.text
-										: '',
+								text: '',
 								styles: {},
-						  }))
-						: [
-								{
-									type: 'text',
-									text:
-										typeof block.content === 'string'
-											? block.content
-											: '',
-									styles: {},
-								},
-						  ],
+							},
+					  ];
+
+				// Create a valid block structure
+				return {
+					type:
+						typeof block.type === 'string'
+							? block.type
+							: 'paragraph',
+					props: {
+						textAlignment: block.props?.textAlignment || 'left',
+						backgroundColor:
+							block.props?.backgroundColor || 'default',
+						textColor: block.props?.textColor || 'default',
+						level:
+							typeof block.props?.level === 'number'
+								? block.props.level
+								: undefined,
+					},
+					content: processedContent,
+					children: Array.isArray(block.children)
+						? block.children
+						: [],
 				};
 			});
 		} catch (error) {
@@ -67,11 +88,16 @@ export function LegalPageEditor({
 		}
 	};
 
+	// Process initial content before creating the editor
+	const validContent =
+		initialContent &&
+		Array.isArray(initialContent) &&
+		initialContent.length > 0
+			? processContent(initialContent)
+			: defaultContent;
+
 	const editor = useCreateBlockNote({
-		initialContent:
-			initialContent && initialContent.length > 0
-				? processContent(initialContent)
-				: defaultContent,
+		initialContent: validContent,
 		domAttributes: {
 			editor: {
 				class: 'min-h-[500px] p-4',

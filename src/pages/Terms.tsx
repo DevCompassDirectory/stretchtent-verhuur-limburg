@@ -1,102 +1,158 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { format } from 'date-fns';
+import { nl } from 'date-fns/locale';
+import '@/styles/legal-content.css';
+
+interface BlockContent {
+	type: string;
+	text?: string;
+	styles?: {
+		bold?: boolean;
+		italic?: boolean;
+		underline?: boolean;
+		strike?: boolean;
+	};
+}
+
+interface Block {
+	id: string;
+	type: string;
+	props: {
+		level?: number;
+		textColor?: string;
+		textAlignment?: string;
+		backgroundColor?: string;
+	};
+	content: BlockContent[];
+	children: Block[];
+}
+
+interface LegalPage {
+	id: string;
+	type: 'privacy' | 'terms' | 'rental';
+	title: string;
+	content: Block[];
+	created_at: string;
+	updated_at: string;
+}
+
+const convertBlockToHtml = (block: Block): string => {
+	if (!block || typeof block !== 'object') {
+		console.warn('Invalid block received:', block);
+		return '';
+	}
+
+	// Convert content array to text with styles
+	const contentHtml = Array.isArray(block.content)
+		? block.content
+				.map((content) => {
+					let text = content?.text || '';
+					if (content?.styles) {
+						if (content.styles.bold)
+							text = `<strong>${text}</strong>`;
+						if (content.styles.italic) text = `<em>${text}</em>`;
+						if (content.styles.underline) text = `<u>${text}</u>`;
+						if (content.styles.strike) text = `<s>${text}</s>`;
+					}
+					return text;
+				})
+				.join('')
+		: '';
+
+	// Ensure props exists
+	const props = block.props || {};
+
+	// Wrap content based on block type
+	switch (block.type) {
+		case 'heading':
+			const level = props.level || 1;
+			return `<h${level}>${contentHtml}</h${level}>`;
+		case 'paragraph':
+			return `<p>${contentHtml}</p>`;
+		case 'bulletListItem':
+			return `<li>${contentHtml}</li>`;
+		case 'numberedListItem':
+			return `<li>${contentHtml}</li>`;
+		default:
+			return contentHtml;
+	}
+};
+
+const wrapListItems = (html: string): string => {
+	// Wrap consecutive bulletListItems in <ul>
+	html = html.replace(
+		/(<li>(?:(?!<li>).)*?<\/li>(?:\s*<li>(?:(?!<li>).)*?<\/li>)*)/g,
+		'<ul>$1</ul>'
+	);
+
+	// Wrap consecutive numberedListItems in <ol>
+	html = html.replace(
+		/(<li>(?:(?!<li>).)*?<\/li>(?:\s*<li>(?:(?!<li>).)*?<\/li>)*)/g,
+		'<ol>$1</ol>'
+	);
+
+	return html;
+};
 
 const Terms = () => {
-  return (
-    <div className="container mx-auto px-4 py-16 mt-20">
-      <h1 className="text-4xl font-bold mb-8">Algemene Voorwaarden</h1>
-      <ScrollArea className="h-[calc(100vh-300px)] pr-4">
-        <div className="prose prose-lg max-w-none">
-          <p className="text-lg text-muted-foreground mb-8">
-            Laatst bijgewerkt: {new Date().toLocaleDateString('nl-NL')}
-          </p>
+	const { data: page, isLoading } = useQuery({
+		queryKey: ['terms-page'],
+		queryFn: async (): Promise<LegalPage> => {
+			const { data, error } = await supabase
+				.from('legal_pages')
+				.select('*')
+				.eq('id', 'c2156a5c-28bd-43a8-9d11-b1c0284b55fd')
+				.single();
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">1. Definities</h2>
-            <p>In deze algemene voorwaarden wordt verstaan onder:</p>
-            <ul className="list-disc ml-6 mt-2">
-              <li><strong>StretchTent Limburg:</strong> de verhuurder van stretchtenten, gevestigd in Limburg;</li>
-              <li><strong>Huurder:</strong> de natuurlijke of rechtspersoon die met StretchTent Limburg een overeenkomst aangaat;</li>
-              <li><strong>Overeenkomst:</strong> de huurovereenkomst tussen StretchTent Limburg en de huurder;</li>
-              <li><strong>Materialen:</strong> de stretchtent(en) en eventuele aanvullende materialen.</li>
-            </ul>
-          </section>
+			if (error) throw error;
+			if (!data) throw new Error('Terms page not found');
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">2. Toepasselijkheid</h2>
-            <p>Deze algemene voorwaarden zijn van toepassing op alle aanbiedingen en overeenkomsten van StretchTent Limburg. Afwijkingen van deze voorwaarden zijn slechts geldig indien deze uitdrukkelijk schriftelijk zijn overeengekomen.</p>
-          </section>
+			return {
+				...data,
+				content: data.content as unknown as Block[],
+			};
+		},
+	});
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">3. Offertes en Aanbiedingen</h2>
-            <p>Alle offertes en aanbiedingen van StretchTent Limburg zijn vrijblijvend, tenzij in de offerte een termijn voor aanvaarding is gesteld. Een offerte of aanbieding vervalt indien het product waarop de offerte of de aanbieding betrekking heeft in de tussentijd niet meer beschikbaar is.</p>
-          </section>
+	if (isLoading) {
+		return (
+			<div className='container mx-auto px-4 py-16 mt-20'>
+				<div className='animate-pulse'>
+					<div className='h-8 bg-muted rounded w-1/4 mb-8'></div>
+					<div className='space-y-4'>
+						<div className='h-4 bg-muted rounded w-3/4'></div>
+						<div className='h-4 bg-muted rounded w-2/3'></div>
+						<div className='h-4 bg-muted rounded w-1/2'></div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">4. Huurperiode</h2>
-            <p>De huurperiode vangt aan op het moment dat de materialen het magazijn van StretchTent Limburg verlaten en eindigt op het moment dat de materialen weer in het magazijn zijn teruggebracht, tenzij schriftelijk anders is overeengekomen.</p>
-          </section>
+	const contentHtml = page?.content
+		? wrapListItems(page.content.map(convertBlockToHtml).join(''))
+		: '';
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">5. Huurprijs en Betaling</h2>
-            <ul className="list-disc ml-6 mt-2">
-              <li>De huurprijs wordt vooraf overeengekomen en schriftelijk vastgelegd.</li>
-              <li>Betaling dient te geschieden binnen 14 dagen na factuurdatum.</li>
-              <li>Bij reservering dient 50% van de huursom te worden voldaan.</li>
-              <li>Het resterende bedrag dient uiterlijk 7 dagen voor aanvang van de huurperiode te zijn voldaan.</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">6. Verplichtingen Huurder</h2>
-            <p>De huurder is verplicht:</p>
-            <ul className="list-disc ml-6 mt-2">
-              <li>De materialen volgens de bestemming te gebruiken;</li>
-              <li>De materialen in dezelfde staat terug te bezorgen;</li>
-              <li>Geen wijzigingen aan de materialen aan te brengen;</li>
-              <li>StretchTent Limburg toegang tot de materialen te verschaffen;</li>
-              <li>Onderverhuur en beschikbaarstelling aan derden uitsluitend met schriftelijke toestemming van StretchTent Limburg te doen geschieden.</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">7. Aansprakelijkheid</h2>
-            <p>StretchTent Limburg is niet aansprakelijk voor:</p>
-            <ul className="list-disc ml-6 mt-2">
-              <li>Schade ontstaan door het gebruik van de materialen;</li>
-              <li>Schade als gevolg van weersomstandigheden;</li>
-              <li>Indirecte schade, waaronder gevolgschade en gederfde winst;</li>
-              <li>Schade veroorzaakt door hulppersonen.</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">8. Verzekering</h2>
-            <p>De huurder is verplicht de materialen gedurende de huurperiode te verzekeren tegen diefstal, verlies en beschadiging. StretchTent Limburg kan een bewijs van verzekering verlangen.</p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">9. Annulering</h2>
-            <p>Bij annulering van de overeenkomst door de huurder gelden de volgende voorwaarden:</p>
-            <ul className="list-disc ml-6 mt-2">
-              <li>Bij annulering meer dan 30 dagen voor aanvang: 25% van de huursom;</li>
-              <li>Bij annulering tussen 30 en 14 dagen voor aanvang: 50% van de huursom;</li>
-              <li>Bij annulering minder dan 14 dagen voor aanvang: 100% van de huursom.</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">10. Toepasselijk Recht</h2>
-            <p>Op alle rechtsbetrekkingen waarbij StretchTent Limburg partij is, is uitsluitend het Nederlands recht van toepassing. De rechtbank Limburg is bij uitsluiting bevoegd van geschillen kennis te nemen.</p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">11. Wijziging Voorwaarden</h2>
-            <p>StretchTent Limburg is bevoegd wijzigingen in deze voorwaarden aan te brengen. De wijzigingen treden in werking op het aangekondigde tijdstip van inwerkingtreding.</p>
-          </section>
-        </div>
-      </ScrollArea>
-    </div>
-  );
+	return (
+		<div className='max-w-screen-lg mx-auto px-4 py-16 mt-20'>
+			<h1 className='text-4xl font-bold mb-8'>
+				{page?.title || 'Algemene Voorwaarden'}
+			</h1>
+			<p className='text-lg text-muted-foreground mb-8'>
+				Laatst bijgewerkt:{' '}
+				{page?.updated_at
+					? format(new Date(page.updated_at), 'd MMMM yyyy', {
+							locale: nl,
+					  })
+					: ''}
+			</p>
+			<div
+				className='legal-content'
+				dangerouslySetInnerHTML={{ __html: contentHtml }}
+			/>
+		</div>
+	);
 };
 
 export default Terms;

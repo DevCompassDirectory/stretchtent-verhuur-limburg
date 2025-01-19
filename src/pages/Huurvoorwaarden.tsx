@@ -1,88 +1,158 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { format } from 'date-fns';
+import { nl } from 'date-fns/locale';
+import '@/styles/legal-content.css';
+
+interface BlockContent {
+	type: string;
+	text?: string;
+	styles?: {
+		bold?: boolean;
+		italic?: boolean;
+		underline?: boolean;
+		strike?: boolean;
+	};
+}
+
+interface Block {
+	id: string;
+	type: string;
+	props: {
+		level?: number;
+		textColor?: string;
+		textAlignment?: string;
+		backgroundColor?: string;
+	};
+	content: BlockContent[];
+	children: Block[];
+}
+
+interface LegalPage {
+	id: string;
+	type: 'privacy' | 'terms' | 'rental';
+	title: string;
+	content: Block[];
+	created_at: string;
+	updated_at: string;
+}
+
+const convertBlockToHtml = (block: Block): string => {
+	if (!block || typeof block !== 'object') {
+		console.warn('Invalid block received:', block);
+		return '';
+	}
+
+	// Convert content array to text with styles
+	const contentHtml = Array.isArray(block.content)
+		? block.content
+				.map((content) => {
+					let text = content?.text || '';
+					if (content?.styles) {
+						if (content.styles.bold)
+							text = `<strong>${text}</strong>`;
+						if (content.styles.italic) text = `<em>${text}</em>`;
+						if (content.styles.underline) text = `<u>${text}</u>`;
+						if (content.styles.strike) text = `<s>${text}</s>`;
+					}
+					return text;
+				})
+				.join('')
+		: '';
+
+	// Ensure props exists
+	const props = block.props || {};
+
+	// Wrap content based on block type
+	switch (block.type) {
+		case 'heading':
+			const level = props.level || 1;
+			return `<h${level}>${contentHtml}</h${level}>`;
+		case 'paragraph':
+			return `<p>${contentHtml}</p>`;
+		case 'bulletListItem':
+			return `<li>${contentHtml}</li>`;
+		case 'numberedListItem':
+			return `<li>${contentHtml}</li>`;
+		default:
+			return contentHtml;
+	}
+};
+
+const wrapListItems = (html: string): string => {
+	// Wrap consecutive bulletListItems in <ul>
+	html = html.replace(
+		/(<li>(?:(?!<li>).)*?<\/li>(?:\s*<li>(?:(?!<li>).)*?<\/li>)*)/g,
+		'<ul>$1</ul>'
+	);
+
+	// Wrap consecutive numberedListItems in <ol>
+	html = html.replace(
+		/(<li>(?:(?!<li>).)*?<\/li>(?:\s*<li>(?:(?!<li>).)*?<\/li>)*)/g,
+		'<ol>$1</ol>'
+	);
+
+	return html;
+};
 
 const Huurvoorwaarden = () => {
-  return (
-    <div className="container mx-auto px-4 py-16 mt-20">
-      <h1 className="text-4xl font-bold mb-8">Huurvoorwaarden</h1>
-      <ScrollArea className="h-[calc(100vh-300px)] pr-4">
-        <div className="prose prose-lg max-w-none">
-          <p className="text-lg text-muted-foreground mb-8">
-            Laatst bijgewerkt: {new Date().toLocaleDateString('nl-NL')}
-          </p>
+	const { data: page, isLoading } = useQuery({
+		queryKey: ['rental-page'],
+		queryFn: async (): Promise<LegalPage> => {
+			const { data, error } = await supabase
+				.from('legal_pages')
+				.select('*')
+				.eq('id', '50885dea-c4ab-4195-a15d-20001ab9aff3')
+				.single();
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">1. Algemeen</h2>
-            <p>Deze huurvoorwaarden zijn van toepassing op alle huurovereenkomsten van StretchTent Limburg, hierna te noemen verhuurder.</p>
-          </section>
+			if (error) throw error;
+			if (!data) throw new Error('Rental terms page not found');
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">2. Huurperiode</h2>
-            <p>De huurperiode gaat in op het moment dat de stretchtent het magazijn verlaat en eindigt wanneer deze weer compleet en in goede staat is teruggebracht.</p>
-          </section>
+			return {
+				...data,
+				content: data.content as unknown as Block[],
+			};
+		},
+	});
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">3. Huurprijs</h2>
-            <ul className="list-disc ml-6 mt-2">
-              <li>De huurprijs wordt vooraf overeengekomen en schriftelijk vastgelegd</li>
-              <li>Prijzen zijn inclusief op- en afbouw</li>
-              <li>Transportkosten worden apart berekend</li>
-              <li>Bij reservering dient 50% van de huursom te worden voldaan</li>
-            </ul>
-          </section>
+	if (isLoading) {
+		return (
+			<div className='container mx-auto px-4 py-16 mt-20'>
+				<div className='animate-pulse'>
+					<div className='h-8 bg-muted rounded w-1/4 mb-8'></div>
+					<div className='space-y-4'>
+						<div className='h-4 bg-muted rounded w-3/4'></div>
+						<div className='h-4 bg-muted rounded w-2/3'></div>
+						<div className='h-4 bg-muted rounded w-1/2'></div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">4. Verplichtingen Huurder</h2>
-            <p>De huurder is verplicht:</p>
-            <ul className="list-disc ml-6 mt-2">
-              <li>De tent en materialen volgens bestemming te gebruiken</li>
-              <li>Geen wijzigingen aan te brengen</li>
-              <li>Verhuurder toegang te verschaffen voor inspectie</li>
-              <li>Onderverhuur alleen met schriftelijke toestemming</li>
-            </ul>
-          </section>
+	const contentHtml = page?.content
+		? wrapListItems(page.content.map(convertBlockToHtml).join(''))
+		: '';
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">5. Schade en Aansprakelijkheid</h2>
-            <ul className="list-disc ml-6 mt-2">
-              <li>Schade dient direct gemeld te worden</li>
-              <li>Huurder is aansprakelijk voor schade tijdens de huurperiode</li>
-              <li>Verhuurder is niet aansprakelijk voor persoonlijke ongevallen</li>
-              <li>Verhuurder is niet aansprakelijk voor schade door weersomstandigheden</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">6. Annulering</h2>
-            <p>Bij annulering gelden de volgende voorwaarden:</p>
-            <ul className="list-disc ml-6 mt-2">
-              <li>Tot 30 dagen voor aanvang: 25% van de huursom</li>
-              <li>14-30 dagen voor aanvang: 50% van de huursom</li>
-              <li>Minder dan 14 dagen: 100% van de huursom</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">7. Weersomstandigheden</h2>
-            <p>Bij extreme weersomstandigheden behoudt de verhuurder zich het recht voor om:</p>
-            <ul className="list-disc ml-6 mt-2">
-              <li>De opbouw uit te stellen</li>
-              <li>De tent preventief af te bouwen</li>
-              <li>Het evenement te annuleren</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">8. Betaling</h2>
-            <ul className="list-disc ml-6 mt-2">
-              <li>50% aanbetaling bij reservering</li>
-              <li>Restant uiterlijk 7 dagen voor aanvang</li>
-              <li>Bij niet tijdige betaling kunnen extra kosten in rekening worden gebracht</li>
-            </ul>
-          </section>
-        </div>
-      </ScrollArea>
-    </div>
-  );
+	return (
+		<div className='max-w-screen-lg mx-auto px-4 py-16 mt-20'>
+			<h1 className='text-4xl font-bold mb-8'>
+				{page?.title || 'Huurvoorwaarden'}
+			</h1>
+			<p className='text-lg text-muted-foreground mb-8'>
+				Laatst bijgewerkt:{' '}
+				{page?.updated_at
+					? format(new Date(page.updated_at), 'd MMMM yyyy', {
+							locale: nl,
+					  })
+					: ''}
+			</p>
+			<div
+				className='legal-content'
+				dangerouslySetInnerHTML={{ __html: contentHtml }}
+			/>
+		</div>
+	);
 };
 
 export default Huurvoorwaarden;
