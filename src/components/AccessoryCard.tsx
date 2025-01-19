@@ -29,7 +29,7 @@ export const AccessoryCard = ({ accessory }: AccessoryCardProps) => {
             <p className="text-muted-foreground">{accessory.short_description}</p>
           </div>
           <Button variant="outline" className="mt-6" asChild>
-            <Link to={`/accessoires/${accessory.slug}`} className="flex items-center justify-center gap-2">
+            <Link to={`/toebehoren/${accessory.slug}`} className="flex items-center justify-center gap-2">
               Bekijk Details
               <ArrowRight size={16} />
             </Link>
