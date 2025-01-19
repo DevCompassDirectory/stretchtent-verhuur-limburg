@@ -3,12 +3,11 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { ContentSection } from "@/components/admin/ContentSection";
-import { Facebook, Instagram, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 interface FooterFormValues {
   description: string;
@@ -71,7 +70,6 @@ const FooterPage = () => {
 
       if (contentError) throw contentError;
 
-      // Update social links
       for (const link of socialLinks) {
         if (link.id.startsWith("new")) {
           const { id, ...newLink } = link;
@@ -130,110 +128,111 @@ const FooterPage = () => {
     );
   };
 
+  const fields = [
+    {
+      name: "description" as const,
+      label: "Description",
+      description: "The main description text in the footer",
+      type: "textarea" as const,
+    },
+    {
+      name: "phone" as const,
+      label: "Phone",
+      description: "Contact phone number",
+      type: "text" as const,
+    },
+    {
+      name: "email" as const,
+      label: "Email",
+      description: "Contact email address",
+      type: "text" as const,
+    },
+    {
+      name: "address" as const,
+      label: "Address",
+      description: "Physical address",
+      type: "text" as const,
+    },
+  ];
+
   return (
-    <ContentSection title="Footer Settings">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Description</label>
-              <Textarea
-                {...form.register("description")}
-                className="mt-1"
-                rows={4}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Phone</label>
-              <Input {...form.register("phone")} className="mt-1" />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Email</label>
-              <Input {...form.register("email")} className="mt-1" type="email" />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Address</label>
-              <Input {...form.register("address")} className="mt-1" />
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Social Media Links</label>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addSocialLink}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Link
-                </Button>
-              </div>
-
-              <div className="space-y-4">
-                {socialLinks.map((link, index) => (
-                  <div key={link.id} className="flex items-center gap-4">
-                    <select
-                      value={link.icon_type}
-                      onChange={(e) =>
-                        updateSocialLink(index, {
-                          icon_type: e.target.value as SocialLink["icon_type"],
-                        })
-                      }
-                      className="h-10 rounded-md border border-input bg-background px-3 py-2"
-                    >
-                      <option value="facebook">Facebook</option>
-                      <option value="instagram">Instagram</option>
-                      <option value="twitter">Twitter</option>
-                      <option value="linkedin">LinkedIn</option>
-                      <option value="youtube">YouTube</option>
-                      <option value="custom">Custom</option>
-                    </select>
-
-                    {link.icon_type === "custom" && (
-                      <Input
-                        value={link.custom_svg || ""}
-                        onChange={(e) =>
-                          updateSocialLink(index, {
-                            custom_svg: e.target.value,
-                          })
-                        }
-                        placeholder="Paste SVG code here"
-                        className="flex-1"
-                      />
-                    )}
-
-                    <Input
-                      value={link.url}
-                      onChange={(e) =>
-                        updateSocialLink(index, { url: e.target.value })
-                      }
-                      placeholder="URL"
-                      className="flex-1"
-                    />
-
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => removeSocialLink(index)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Save Changes"}
+    <ContentSection
+      title="Footer Settings"
+      fields={fields}
+      form={form}
+    >
+      <div className="space-y-4 mt-8">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-medium">Social Media Links</h4>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addSocialLink}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Link
           </Button>
-        </form>
-      </Form>
+        </div>
+
+        <div className="space-y-4">
+          {socialLinks.map((link, index) => (
+            <div key={link.id} className="flex items-center gap-4">
+              <select
+                value={link.icon_type}
+                onChange={(e) =>
+                  updateSocialLink(index, {
+                    icon_type: e.target.value as SocialLink["icon_type"],
+                  })
+                }
+                className="h-10 rounded-md border border-input bg-background px-3 py-2"
+              >
+                <option value="facebook">Facebook</option>
+                <option value="instagram">Instagram</option>
+                <option value="twitter">Twitter</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="youtube">YouTube</option>
+                <option value="custom">Custom</option>
+              </select>
+
+              {link.icon_type === "custom" && (
+                <Input
+                  value={link.custom_svg || ""}
+                  onChange={(e) =>
+                    updateSocialLink(index, {
+                      custom_svg: e.target.value,
+                    })
+                  }
+                  placeholder="Paste SVG code here"
+                  className="flex-1"
+                />
+              )}
+
+              <Input
+                value={link.url}
+                onChange={(e) =>
+                  updateSocialLink(index, { url: e.target.value })
+                }
+                placeholder="URL"
+                className="flex-1"
+              />
+
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => removeSocialLink(index)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Button type="submit" disabled={isSubmitting} className="mt-8">
+        {isSubmitting ? "Saving..." : "Save Changes"}
+      </Button>
     </ContentSection>
   );
 };
