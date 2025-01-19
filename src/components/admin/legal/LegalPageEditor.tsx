@@ -7,9 +7,18 @@ interface LegalPageEditorProps {
   onSave: (content: any[]) => void;
 }
 
+// Define the PartialBlock type as per BlockNote documentation
+type PartialBlock = {
+  id?: string;
+  type?: string;
+  props?: Partial<Record<string, any>>;
+  content?: string | Array<{ type: string; text: string; }>;
+  children?: PartialBlock[];
+};
+
 export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps) {
   // Default content for when initialContent is invalid or empty
-  const defaultContent = [
+  const defaultContent: PartialBlock[] = [
     {
       type: "paragraph",
       content: [
@@ -21,24 +30,35 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
     },
   ];
 
-  // Ensure initialContent is a valid array and each block has the required properties
-  const validateBlock = (block: any) => {
+  // Validate if a block matches the PartialBlock structure
+  const validateBlock = (block: any): block is PartialBlock => {
     if (!block || typeof block !== 'object') return false;
-    if (!block.type || typeof block.type !== 'string') return false;
-    if (!Array.isArray(block.content)) return false;
+    if (block.type && typeof block.type !== 'string') return false;
+    if (block.content && !Array.isArray(block.content) && typeof block.content !== 'string') return false;
+    if (block.children && !Array.isArray(block.children)) return false;
     return true;
   };
 
-  // Validate and clean the content
-  const validContent = Array.isArray(initialContent) && initialContent.length > 0
-    ? initialContent.filter(validateBlock)
+  // Transform the content to ensure it matches PartialBlock structure
+  const transformContent = (content: any[]): PartialBlock[] => {
+    try {
+      return content.filter(validateBlock).map(block => ({
+        ...block,
+        content: Array.isArray(block.content) ? block.content : [{ type: "text", text: String(block.content || "") }],
+      }));
+    } catch (error) {
+      console.error("Error transforming content:", error);
+      return defaultContent;
+    }
+  };
+
+  // Process the initial content
+  const processedContent = Array.isArray(initialContent) && initialContent.length > 0
+    ? transformContent(initialContent)
     : defaultContent;
 
-  // If no valid blocks were found, use default content
-  const editorContent = validContent.length > 0 ? validContent : defaultContent;
-
   const editor: BlockNoteEditor = useBlockNote({
-    initialContent: editorContent,
+    initialContent: processedContent,
   });
 
   return (
