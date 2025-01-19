@@ -50,14 +50,20 @@ export function LegalPageEditDialog({
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh]">
+      <DialogContent className="max-w-4xl max-h-[90vh]" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Edit {page?.title}</DialogTitle>
         </DialogHeader>
         {page && (
-          <div className="space-y-4">
+          <div className="space-y-4" onSubmit={handleSubmit}>
             <LegalPageEditor
               initialContent={page.content}
               onSave={handleSave}
@@ -67,6 +73,7 @@ export function LegalPageEditDialog({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
                 disabled={isLoading}
+                type="button"
               >
                 Cancel
               </Button>

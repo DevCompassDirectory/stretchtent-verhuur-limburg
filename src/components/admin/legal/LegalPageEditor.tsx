@@ -72,7 +72,9 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Prevent form submission
+    e.stopPropagation(); // Stop event propagation
     onSave(editor.topLevelBlocks);
+    return false; // Ensure no default form behavior
   };
 
   return (
