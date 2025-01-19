@@ -21,16 +21,24 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
     },
   ];
 
-  // Validate initialContent and ensure it's a valid array with at least one block
-  const validContent = Array.isArray(initialContent) && initialContent.length > 0 
-    ? initialContent.map(block => ({
-        ...block,
-        content: Array.isArray(block.content) ? block.content : [],
-      }))
+  // Ensure initialContent is a valid array and each block has the required properties
+  const validateBlock = (block: any) => {
+    if (!block || typeof block !== 'object') return false;
+    if (!block.type || typeof block.type !== 'string') return false;
+    if (!Array.isArray(block.content)) return false;
+    return true;
+  };
+
+  // Validate and clean the content
+  const validContent = Array.isArray(initialContent) && initialContent.length > 0
+    ? initialContent.filter(validateBlock)
     : defaultContent;
 
+  // If no valid blocks were found, use default content
+  const editorContent = validContent.length > 0 ? validContent : defaultContent;
+
   const editor: BlockNoteEditor = useBlockNote({
-    initialContent: validContent,
+    initialContent: editorContent,
   });
 
   return (
