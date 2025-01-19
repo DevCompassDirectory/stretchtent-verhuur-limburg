@@ -61,16 +61,36 @@ const LegalPageEditPage = () => {
     return <div>Legal page not found</div>;
   }
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const content = formData.get("content");
+    if (content) {
+      updatePage(JSON.parse(content as string));
+    }
+  };
+
   return (
     <ContentSection 
       title={`Edit ${page.title}`}
       fields={[]}
       form={form}
+      onSubmit={handleSubmit}
     >
       <div className="space-y-6">
+        <input 
+          type="hidden" 
+          name="content" 
+          value={JSON.stringify(page.content)} 
+        />
         <LegalPageEditor
           initialContent={page.content}
-          onSave={(content) => updatePage(content)}
+          onSave={(content) => {
+            const input = document.querySelector('input[name="content"]') as HTMLInputElement;
+            if (input) {
+              input.value = JSON.stringify(content);
+            }
+          }}
         />
         <div className="flex justify-end space-x-4">
           <Button
@@ -84,7 +104,6 @@ const LegalPageEditPage = () => {
           <Button
             type="submit"
             disabled={isUpdating}
-            form="legal-page-form"
           >
             {isUpdating ? (
               <>
