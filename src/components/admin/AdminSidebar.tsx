@@ -1,4 +1,4 @@
-import { LayoutDashboard, Home, Image, Tent, Package, FolderOpen, FooterIcon } from "lucide-react";
+import { LayoutDashboard, Home, Image, Tent, Package, FolderOpen, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import {
   Sheet,
@@ -42,7 +42,7 @@ const menuItems = [
   },
   {
     title: "Footer",
-    icon: FooterIcon,
+    icon: Settings,
     path: "/dashboard/footer",
   },
 ];
