@@ -31,7 +31,7 @@ const menuItems = [
     path: "/dashboard/stretchtents",
   },
   {
-    title: "Accessories",
+    title: "Toebehoren",
     icon: Package,
     path: "/dashboard/accessories",
   },

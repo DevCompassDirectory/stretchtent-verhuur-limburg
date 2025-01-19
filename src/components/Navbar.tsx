@@ -60,8 +60,8 @@ export const Navbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/accessoires" className="w-full">
-                    Accessoires
+                  <Link to="/toebehoren" className="w-full">
+                    Toebehoren
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -107,7 +107,7 @@ export const Navbar = () => {
           onClose={() => setIsOpen(false)}
           categories={[
             { id: '1', name: 'Stretchtenten', slug: 'stretchtenten' },
-            { id: '2', name: 'Accessoires', slug: 'accessoires' }
+            { id: '2', name: 'Toebehoren', slug: 'toebehoren' }
           ]}
         />
       </div>
