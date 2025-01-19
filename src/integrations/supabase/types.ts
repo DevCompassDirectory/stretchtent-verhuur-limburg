@@ -183,6 +183,83 @@ export type Database = {
         }
         Relationships: []
       }
+      project_images: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          project_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          project_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          project_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_images_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          category: Database["public"]["Enums"]["project_category"]
+          created_at: string
+          date: string
+          description: string
+          display_order: number
+          full_description: string
+          id: string
+          main_image: string
+          specs: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["project_category"]
+          created_at?: string
+          date: string
+          description: string
+          display_order?: number
+          full_description: string
+          id?: string
+          main_image: string
+          specs?: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["project_category"]
+          created_at?: string
+          date?: string
+          description?: string
+          display_order?: number
+          full_description?: string
+          id?: string
+          main_image?: string
+          specs?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       stretchtents: {
         Row: {
           area: string
@@ -260,6 +337,7 @@ export type Database = {
         | "features"
         | "testimonials"
       product_type: "deco" | "floor" | "lighting" | "furniture"
+      project_category: "bruiloft" | "zakelijk" | "feest" | "festival"
     }
     CompositeTypes: {
       [_ in never]: never
