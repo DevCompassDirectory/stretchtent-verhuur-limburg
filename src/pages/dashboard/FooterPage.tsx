@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -130,25 +129,25 @@ const FooterPage = () => {
 
   const fields = [
     {
-      name: "description" as const,
+      name: "description",
       label: "Description",
       description: "The main description text in the footer",
       type: "textarea" as const,
     },
     {
-      name: "phone" as const,
+      name: "phone",
       label: "Phone",
       description: "Contact phone number",
       type: "text" as const,
     },
     {
-      name: "email" as const,
+      name: "email",
       label: "Email",
       description: "Contact email address",
       type: "text" as const,
     },
     {
-      name: "address" as const,
+      name: "address",
       label: "Address",
       description: "Physical address",
       type: "text" as const,

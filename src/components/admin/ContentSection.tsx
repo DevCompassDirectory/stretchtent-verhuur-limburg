@@ -1,16 +1,15 @@
-import { FormField, FormItem, FormLabel, FormControl, FormDescription } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormDescription, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageSelector } from "./ImageSelector";
 import type { UseFormReturn } from "react-hook-form";
-import type { HomePageContent } from "@/types/home";
 
 interface Field {
-  name: keyof HomePageContent;
+  name: string;
   label: string;
   description: string;
   type?: "text" | "textarea" | "image";
-  altTextField?: keyof HomePageContent;
+  altTextField?: string;
 }
 
 interface ContentSectionProps {
