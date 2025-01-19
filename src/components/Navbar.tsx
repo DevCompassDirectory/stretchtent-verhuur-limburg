@@ -3,9 +3,13 @@ import { MobileNav } from "./nav/MobileNav";
 import { NavLinks } from "./nav/NavLinks";
 import { UserMenu } from "./nav/UserMenu";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 
 export const Navbar = () => {
   const isMobile = useIsMobile();
+  const { session, isAdmin, signOut } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b">
@@ -15,11 +19,17 @@ export const Navbar = () => {
         </Link>
 
         {isMobile ? (
-          <MobileNav />
+          <MobileNav 
+            isOpen={isOpen}
+            session={!!session}
+            isAdmin={isAdmin}
+            signOut={signOut}
+            onClose={() => setIsOpen(false)}
+          />
         ) : (
           <div className="flex items-center gap-8">
             <NavLinks />
-            <UserMenu />
+            {session && isAdmin && <UserMenu signOut={signOut} />}
           </div>
         )}
       </nav>

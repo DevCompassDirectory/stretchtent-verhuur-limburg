@@ -4,10 +4,10 @@ import { HiringDropdown } from "./HiringDropdown";
 export const NavLinks = () => {
   return (
     <>
-      <NavLink href="/">Home</NavLink>
+      <NavLink to="/">Home</NavLink>
       <HiringDropdown />
-      <NavLink href="/projects">Projecten</NavLink>
-      <NavLink href="/contact">Contact</NavLink>
+      <NavLink to="/projects">Projecten</NavLink>
+      <NavLink to="/contact">Contact</NavLink>
     </>
   );
 };
