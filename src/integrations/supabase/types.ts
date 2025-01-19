@@ -337,7 +337,15 @@ export type Database = {
         | "features"
         | "testimonials"
       product_type: "deco" | "floor" | "lighting" | "furniture"
-      project_category: "bruiloft" | "zakelijk" | "feest" | "festival"
+      project_category:
+        | "bruiloft"
+        | "zakelijk"
+        | "feest"
+        | "festival"
+        | "communie"
+        | "sport"
+        | "baby shower"
+        | "verjaardag"
     }
     CompositeTypes: {
       [_ in never]: never
