@@ -8,8 +8,18 @@ interface LegalPageEditorProps {
 }
 
 export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps) {
+  // Ensure we always have at least one empty paragraph block
+  const defaultContent = [
+    {
+      type: "paragraph",
+      content: [],
+    },
+  ];
+
   const editor: BlockNoteEditor = useBlockNote({
-    initialContent,
+    initialContent: Array.isArray(initialContent) && initialContent.length > 0 
+      ? initialContent 
+      : defaultContent,
   });
 
   return (
