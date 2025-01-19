@@ -10,7 +10,7 @@ interface LegalPageEditorProps {
 export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps) {
   const editor: BlockNoteEditor = useBlockNote({
     initialContent,
-    onChange: (editor) => {
+    onEditorChange: (editor) => {
       const saveButton = document.querySelector(
         'button[type="submit"]'
       ) as HTMLButtonElement;
