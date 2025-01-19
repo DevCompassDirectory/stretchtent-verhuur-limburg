@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Edit2, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { LegalPageEditDialog } from "@/components/admin/legal/LegalPageEditDialog";
 import { ContentSection } from "@/components/admin/ContentSection";
 import { useForm } from "react-hook-form";
 
@@ -24,7 +23,7 @@ export type LegalPage = {
 };
 
 const LegalPagesPage = () => {
-  const [selectedPage, setSelectedPage] = useState<LegalPage | null>(null);
+  const navigate = useNavigate();
   const form = useForm();
 
   const { data: pages, isLoading } = useQuery({
@@ -75,7 +74,7 @@ const LegalPagesPage = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setSelectedPage(page)}
+                  onClick={() => navigate(`/dashboard/legal/${page.id}`)}
                 >
                   <Edit2 className="h-4 w-4" />
                 </Button>
@@ -84,12 +83,6 @@ const LegalPagesPage = () => {
           ))}
         </TableBody>
       </Table>
-
-      <LegalPageEditDialog
-        page={selectedPage}
-        open={!!selectedPage}
-        onOpenChange={(open) => !open && setSelectedPage(null)}
-      />
     </ContentSection>
   );
 };
