@@ -228,6 +228,33 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_pages: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          title: string
+          type: Database["public"]["Enums"]["legal_page_type"]
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          id?: string
+          title: string
+          type: Database["public"]["Enums"]["legal_page_type"]
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          title?: string
+          type?: Database["public"]["Enums"]["legal_page_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -405,6 +432,7 @@ export type Database = {
         | "cta"
         | "features"
         | "testimonials"
+      legal_page_type: "privacy" | "terms" | "rental"
       product_type: "deco" | "floor" | "lighting" | "furniture"
       project_category:
         | "bruiloft"
