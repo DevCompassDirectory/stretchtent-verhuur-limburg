@@ -23,7 +23,7 @@ const AccessoryDetail = () => {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-2xl font-bold">Accessoire niet gevonden</h1>
           <Button asChild className="mt-4">
-            <Link to="/accessoires">Terug naar Accessoires</Link>
+            <Link to="/toebehoren">Terug naar Toebehoren</Link>
           </Button>
         </div>
       </div>
@@ -34,9 +34,9 @@ const AccessoryDetail = () => {
     <div className="pt-24 pb-20">
       <div className="container mx-auto px-4">
         <Button variant="ghost" className="mb-8" asChild>
-          <Link to="/accessoires" className="flex items-center gap-2">
+          <Link to="/toebehoren" className="flex items-center gap-2">
             <ArrowLeft size={16} />
-            Terug naar Accessoires
+            Terug naar Toebehoren
           </Link>
         </Button>
 
