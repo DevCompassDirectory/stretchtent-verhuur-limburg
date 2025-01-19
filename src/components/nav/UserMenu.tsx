@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { UserAvatar } from "./UserAvatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface UserMenuProps {
   signOut: () => void;
@@ -7,23 +14,31 @@ interface UserMenuProps {
 }
 
 export const UserMenu = ({ signOut, onClose }: UserMenuProps) => (
-  <div className="flex flex-col space-y-4">
-    <Link
-      to="/dashboard"
-      className="text-sm font-medium hover:text-primary transition-colors"
-      onClick={onClose}
-    >
-      Dashboard
-    </Link>
-    <Button 
-      variant="default"
-      className="w-full"
-      onClick={() => {
-        signOut();
-        onClose?.();
-      }}
-    >
-      Sign Out
-    </Button>
-  </div>
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <UserAvatar />
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem asChild>
+        <Link
+          to="/dashboard"
+          className="cursor-pointer"
+          onClick={onClose}
+        >
+          Dashboard
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        className="cursor-pointer"
+        onClick={() => {
+          signOut();
+          onClose?.();
+        }}
+      >
+        Sign Out
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
 );
