@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ContentSection } from "@/components/admin/ContentSection";
 import type { FooterContent } from "@/hooks/use-footer-content";
+import { useEffect } from "react";
 
 interface FooterFormProps {
   footerData: FooterContent | null;
@@ -22,13 +23,26 @@ export const FooterForm = ({ footerData, onSuccess }: FooterFormProps) => {
   const { toast } = useToast();
   const form = useForm<FooterFormValues>({
     defaultValues: {
-      title: footerData?.title || "",
-      description: footerData?.description || "",
-      phone: footerData?.phone || "",
-      email: footerData?.email || "",
-      address: footerData?.address || "",
+      title: "",
+      description: "",
+      phone: "",
+      email: "",
+      address: "",
     },
   });
+
+  // Update form values when footerData changes
+  useEffect(() => {
+    if (footerData) {
+      form.reset({
+        title: footerData.title || "",
+        description: footerData.description || "",
+        phone: footerData.phone || "",
+        email: footerData.email || "",
+        address: footerData.address || "",
+      });
+    }
+  }, [footerData, form]);
 
   const onSubmit = async (data: FooterFormValues) => {
     try {
