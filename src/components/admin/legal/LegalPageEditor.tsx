@@ -70,13 +70,15 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
       : defaultContent,
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent form submission
+    onSave(editor.topLevelBlocks);
+  };
+
   return (
     <form
       id="legal-page-form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSave(editor.topLevelBlocks);
-      }}
+      onSubmit={handleSubmit}
     >
       <BlockNoteViewRaw
         editor={editor}
