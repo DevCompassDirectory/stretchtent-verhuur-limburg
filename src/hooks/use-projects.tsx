@@ -2,6 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Project } from "@/types/project";
 
+interface ProjectWithImages extends Project {
+  project_images: { image_url: string }[];
+}
+
 export const useProjects = () => {
   return useQuery({
     queryKey: ["projects"],
@@ -15,7 +19,14 @@ export const useProjects = () => {
         .order("display_order", { ascending: true });
 
       if (error) throw error;
-      return data as (Project & { project_images: { image_url: string }[] })[];
+      
+      // Transform the data to match our type
+      const projects = data.map((project): ProjectWithImages => ({
+        ...project,
+        specs: project.specs as Project['specs'], // Cast the JSONB to our type
+      }));
+
+      return projects;
     },
   });
 };
@@ -34,7 +45,15 @@ export const useProject = (id: string) => {
         .maybeSingle();
 
       if (error) throw error;
-      return data as (Project & { project_images: { image_url: string }[] }) | null;
+      if (!data) return null;
+
+      // Transform the data to match our type
+      const project: ProjectWithImages = {
+        ...data,
+        specs: data.specs as Project['specs'], // Cast the JSONB to our type
+      };
+
+      return project;
     },
   });
 };

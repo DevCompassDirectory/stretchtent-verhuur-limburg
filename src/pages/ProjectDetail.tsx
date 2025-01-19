@@ -76,15 +76,26 @@ const ProjectDetail = () => {
           <ProjectGallery 
             project={{
               ...project,
-              gallery: project.project_images.map(img => img.image_url)
+              image: project.main_image,
+              gallery: project.project_images.map(img => img.image_url),
+              fullDescription: project.full_description
             }}
             onImageClick={setSelectedImageIndex} 
           />
-          <ProjectInfo project={project} />
+          <ProjectInfo project={{
+            ...project,
+            image: project.main_image,
+            fullDescription: project.full_description
+          }} />
         </div>
 
         <ProjectImageCarousel
-          project={project}
+          project={{
+            ...project,
+            image: project.main_image,
+            fullDescription: project.full_description,
+            gallery: project.project_images.map(img => img.image_url)
+          }}
           selectedImageIndex={selectedImageIndex}
           onClose={() => setSelectedImageIndex(null)}
           allImages={allImages}
