@@ -1,25 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ContentSection } from "@/components/admin/ContentSection";
+import { supabase } from "@/integrations/supabase/client";
+import { FooterForm } from "@/components/admin/footer/FooterForm";
 import { SocialLinksSection } from "@/components/admin/footer/SocialLinksSection";
-import type { FooterContent, FooterSocialLink } from "@/hooks/use-footer-content";
-
-interface FooterFormValues {
-  title: string;
-  description: string;
-  phone: string | null;
-  email: string | null;
-  address: string | null;
-}
+import type { FooterSocialLink } from "@/hooks/use-footer-content";
 
 const FooterPage = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [socialLinks, setSocialLinks] = useState<FooterSocialLink[]>([]);
-  const { toast } = useToast();
 
   const { data: footerData, refetch } = useQuery({
     queryKey: ["footer-content"],
@@ -43,41 +30,12 @@ const FooterPage = () => {
     },
   });
 
-  const form = useForm<FooterFormValues>({
-    defaultValues: {
-      title: "",
-      description: "",
-      phone: "",
-      email: "",
-      address: "",
-    },
-  });
-
-  // Update form values when data is loaded
-  useEffect(() => {
-    if (footerData) {
-      form.reset({
-        title: footerData.title,
-        description: footerData.description,
-        phone: footerData.phone,
-        email: footerData.email,
-        address: footerData.address,
-      });
-    }
-  }, [footerData, form]);
-
-  const onSubmit = async (data: FooterFormValues) => {
-    setIsSubmitting(true);
+  const handleSocialLinksChange = async (links: FooterSocialLink[]) => {
+    setSocialLinks(links);
+    
     try {
-      const { error: contentError } = await supabase
-        .from("footer_content")
-        .update(data)
-        .eq("id", footerData?.id);
-
-      if (contentError) throw contentError;
-
       // Update social links
-      for (const link of socialLinks) {
+      for (const link of links) {
         if (link.id.startsWith("new")) {
           const { id, ...newLink } = link;
           await supabase.from("footer_social_links").insert(newLink);
@@ -90,77 +48,25 @@ const FooterPage = () => {
       }
 
       await refetch();
-      toast({
-        title: "Success",
-        description: "Footer content has been updated.",
-      });
     } catch (error) {
-      console.error("Error updating footer content:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update footer content.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error updating social links:", error);
     }
   };
 
-  const fields = [
-    {
-      name: "title",
-      label: "Title",
-      description: "The main title in the footer",
-      type: "text" as const,
-    },
-    {
-      name: "description",
-      label: "Description",
-      description: "The main description text in the footer",
-      type: "textarea" as const,
-    },
-    {
-      name: "phone",
-      label: "Phone",
-      description: "Contact phone number",
-      type: "text" as const,
-    },
-    {
-      name: "email",
-      label: "Email",
-      description: "Contact email address",
-      type: "text" as const,
-    },
-    {
-      name: "address",
-      label: "Address",
-      description: "Physical address",
-      type: "text" as const,
-    },
-  ];
-
   return (
-    <ContentSection
-      title="Footer Settings"
-      fields={fields}
-      form={form}
-    >
-      <div className="mt-8">
+    <div className="space-y-8">
+      <FooterForm 
+        footerData={footerData} 
+        onSuccess={refetch}
+      />
+      
+      <div className="border rounded-lg p-4">
         <SocialLinksSection
           socialLinks={socialLinks}
-          onSocialLinksChange={setSocialLinks}
+          onSocialLinksChange={handleSocialLinksChange}
         />
       </div>
-
-      <Button 
-        type="submit" 
-        disabled={isSubmitting} 
-        className="mt-8" 
-        onClick={form.handleSubmit(onSubmit)}
-      >
-        {isSubmitting ? "Saving..." : "Save Changes"}
-      </Button>
-    </ContentSection>
+    </div>
   );
 };
 
