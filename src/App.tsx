@@ -23,6 +23,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import HomePage from "./pages/dashboard/HomePage";
 import MediaPage from "./pages/dashboard/MediaPage";
+import ProjectsPage from "./pages/dashboard/ProjectsPage";
 import StretchTentsPage from "./pages/dashboard/StretchTentsPage";
 import AccessoriesPage from "./pages/dashboard/AccessoriesPage";
 
@@ -52,6 +53,7 @@ const App = () => (
                   <Route index element={<div>Welcome to Dashboard</div>} />
                   <Route path="home" element={<HomePage />} />
                   <Route path="media" element={<MediaPage />} />
+                  <Route path="projects" element={<ProjectsPage />} />
                   <Route path="stretchtents" element={<StretchTentsPage />} />
                   <Route path="accessories" element={<AccessoriesPage />} />
                 </Route>

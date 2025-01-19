@@ -1,4 +1,4 @@
-import { LayoutDashboard, Home, Image, Tent, Package } from "lucide-react";
+import { LayoutDashboard, Home, Image, Tent, Package, FolderOpen } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import {
   Sheet,
@@ -24,6 +24,11 @@ const menuItems = [
     title: "Media",
     icon: Image,
     path: "/dashboard/media",
+  },
+  {
+    title: "Projects",
+    icon: FolderOpen,
+    path: "/dashboard/projects",
   },
   {
     title: "Stretchtents",
