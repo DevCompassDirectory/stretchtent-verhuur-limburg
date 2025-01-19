@@ -12,6 +12,11 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
   const defaultContent: PartialBlock[] = [
     {
       type: "paragraph",
+      props: {
+        textAlignment: "left",
+        backgroundColor: "default",
+        textColor: "default"
+      },
       content: [
         {
           type: "text",
@@ -27,20 +32,32 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
     if (!Array.isArray(content)) return defaultContent;
 
     try {
-      return content.map(block => ({
-        type: "paragraph",
-        content: Array.isArray(block.content) 
-          ? block.content.map(item => ({
-              type: "text",
-              text: String(item.text || ""),
-              styles: {} // Add empty styles object as required by BlockNote
-            }))
-          : [{ 
-              type: "text", 
-              text: String(block.content || ""),
-              styles: {} // Add empty styles object as required by BlockNote
-            }],
-      }));
+      return content.map(block => {
+        // Ensure block is an object
+        if (typeof block !== 'object' || !block) {
+          return defaultContent[0];
+        }
+
+        return {
+          type: "paragraph",
+          props: {
+            textAlignment: "left",
+            backgroundColor: "default",
+            textColor: "default"
+          },
+          content: Array.isArray(block.content) 
+            ? block.content.map(item => ({
+                type: "text",
+                text: typeof item?.text === 'string' ? item.text : '',
+                styles: {}
+              }))
+            : [{ 
+                type: "text", 
+                text: typeof block.content === 'string' ? block.content : '',
+                styles: {}
+              }],
+        };
+      });
     } catch (error) {
       console.error("Error processing content:", error);
       return defaultContent;
