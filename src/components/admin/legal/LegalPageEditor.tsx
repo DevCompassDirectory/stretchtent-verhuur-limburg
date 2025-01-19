@@ -1,5 +1,5 @@
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
-import { BlockNoteView, useBlockNote } from "@blocknote/react";
+import { BlockNoteViewRaw, useBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
 
 interface LegalPageEditorProps {
@@ -68,17 +68,15 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
     initialContent: initialContent && initialContent.length > 0 
       ? processContent(initialContent)
       : defaultContent,
-    onEditorContentChange: (editor) => {
-      // This will update the form's state with the latest content
+    onChange: (editor) => {
       onSave(editor.topLevelBlocks);
     },
-    // Disable the side menu to prevent the error
     sideMenu: false,
   });
 
   return (
     <div className="min-h-[500px] border rounded-md">
-      <BlockNoteView
+      <BlockNoteViewRaw
         editor={editor}
         theme="light"
       />

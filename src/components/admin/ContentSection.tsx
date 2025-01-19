@@ -17,15 +17,16 @@ interface ContentSectionProps {
   fields: Field[];
   form: UseFormReturn<any>;
   children?: React.ReactNode;
+  onSubmit?: (e: React.FormEvent) => void;
 }
 
-export const ContentSection = ({ title, fields, form, children }: ContentSectionProps) => {
+export const ContentSection = ({ title, fields, form, children, onSubmit }: ContentSectionProps) => {
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium">{title}</h3>
         <Form {...form}>
-          <form className="space-y-4">
+          <form onSubmit={onSubmit} className="space-y-4">
             <div className="border rounded-lg p-4 space-y-4">
               {fields.map((field) => (
                 <FormField
