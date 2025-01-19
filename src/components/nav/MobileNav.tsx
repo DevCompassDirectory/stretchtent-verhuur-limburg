@@ -33,26 +33,26 @@ export const MobileNav = ({
 
   return (
     <div className="md:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-md shadow-lg animate-fade-down">
-      <div className="px-4 py-4 space-y-4">
+      <div className="flex flex-col space-y-6 px-4 py-6">
         <NavLink to="/" onClick={onClose}>Home</NavLink>
         
         {/* Categories Dropdown */}
-        <div className="space-y-2">
+        <div className="space-y-4">
           <button
             onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
-            className="flex items-center justify-between w-full text-sm font-medium transition-colors hover:text-primary"
+            className="flex items-center justify-between w-full text-sm font-medium transition-colors hover:text-primary bg-transparent border-none p-0"
           >
             Huren
             <ChevronDown className={`h-4 w-4 transition-transform ${isSubMenuOpen ? 'rotate-180' : ''}`} />
           </button>
           
           {isSubMenuOpen && (
-            <div className="pl-4 space-y-2">
+            <div className="flex flex-col space-y-4 pl-4">
               {categories?.map((category) => (
                 <Link
                   key={category.id}
                   to={`/stretchtenten/${category.slug}`}
-                  className="block text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   onClick={onClose}
                 >
                   {category.name}
@@ -60,7 +60,7 @@ export const MobileNav = ({
               ))}
               <Link
                 to="/stretchtenten"
-                className="block text-sm font-medium hover:text-primary"
+                className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={onClose}
               >
                 Alle Stretchtenten

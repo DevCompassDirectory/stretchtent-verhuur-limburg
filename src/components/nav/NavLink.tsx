@@ -9,7 +9,7 @@ interface NavLinkProps {
 export const NavLink = ({ to, children, onClick }: NavLinkProps) => (
   <Link
     to={to}
-    className="hover:text-primary/80 transition-colors"
+    className="text-sm font-medium hover:text-primary transition-colors"
     onClick={onClick}
   >
     {children}
