@@ -16,6 +16,7 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
         {
           type: "text",
           text: "",
+          styles: {}
         },
       ],
     },
@@ -32,8 +33,13 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
           ? block.content.map(item => ({
               type: "text",
               text: String(item.text || ""),
+              styles: {} // Add empty styles object as required by BlockNote
             }))
-          : [{ type: "text", text: String(block.content || "") }],
+          : [{ 
+              type: "text", 
+              text: String(block.content || ""),
+              styles: {} // Add empty styles object as required by BlockNote
+            }],
       }));
     } catch (error) {
       console.error("Error processing content:", error);
