@@ -61,7 +61,12 @@ export const AccessoryForm = ({
               <BasicInfoFields form={form} />
               <ImageSelector
                 value={form.watch("image")}
-                onChange={(value) => form.setValue("image", value)}
+                onChange={(value) => {
+                  // Ensure we only get a string value since we don't support multiple images
+                  if (typeof value === 'string') {
+                    form.setValue("image", value);
+                  }
+                }}
               />
             </div>
             <Button type="submit" className="w-full">
