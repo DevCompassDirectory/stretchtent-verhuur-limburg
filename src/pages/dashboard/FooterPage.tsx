@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +9,7 @@ import { SocialLinksSection } from "@/components/admin/footer/SocialLinksSection
 import type { FooterContent, FooterSocialLink } from "@/hooks/use-footer-content";
 
 interface FooterFormValues {
+  title: string;
   description: string;
   phone: string | null;
   email: string | null;
@@ -44,17 +45,19 @@ const FooterPage = () => {
 
   const form = useForm<FooterFormValues>({
     defaultValues: {
-      description: footerData?.description || "",
-      phone: footerData?.phone || "",
-      email: footerData?.email || "",
-      address: footerData?.address || "",
+      title: "",
+      description: "",
+      phone: "",
+      email: "",
+      address: "",
     },
   });
 
   // Update form values when data is loaded
-  React.useEffect(() => {
+  useEffect(() => {
     if (footerData) {
       form.reset({
+        title: footerData.title,
         description: footerData.description,
         phone: footerData.phone,
         email: footerData.email,
@@ -73,6 +76,7 @@ const FooterPage = () => {
 
       if (contentError) throw contentError;
 
+      // Update social links
       for (const link of socialLinks) {
         if (link.id.startsWith("new")) {
           const { id, ...newLink } = link;
@@ -103,6 +107,12 @@ const FooterPage = () => {
   };
 
   const fields = [
+    {
+      name: "title",
+      label: "Title",
+      description: "The main title in the footer",
+      type: "text" as const,
+    },
     {
       name: "description",
       label: "Description",
@@ -142,7 +152,12 @@ const FooterPage = () => {
         />
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="mt-8" onClick={form.handleSubmit(onSubmit)}>
+      <Button 
+        type="submit" 
+        disabled={isSubmitting} 
+        className="mt-8" 
+        onClick={form.handleSubmit(onSubmit)}
+      >
         {isSubmitting ? "Saving..." : "Save Changes"}
       </Button>
     </ContentSection>

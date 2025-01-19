@@ -25,7 +25,7 @@ export const ContentSection = ({ title, fields, form, children }: ContentSection
       <div>
         <h3 className="text-lg font-medium">{title}</h3>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(() => {})}>
+          <form className="space-y-4">
             <div className="border rounded-lg p-4 space-y-4">
               {fields.map((field) => (
                 <FormField
