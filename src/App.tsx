@@ -26,6 +26,7 @@ import MediaPage from "./pages/dashboard/MediaPage";
 import ProjectsPage from "./pages/dashboard/ProjectsPage";
 import StretchTentsPage from "./pages/dashboard/StretchTentsPage";
 import AccessoriesPage from "./pages/dashboard/AccessoriesPage";
+import FooterPage from "./pages/dashboard/FooterPage";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
                   <Route path="projects" element={<ProjectsPage />} />
                   <Route path="stretchtents" element={<StretchTentsPage />} />
                   <Route path="accessories" element={<AccessoriesPage />} />
+                  <Route path="footer" element={<FooterPage />} />
                 </Route>
                 <Route path="/" element={<Home />} />
                 <Route path="/projects" element={<Projects />} />

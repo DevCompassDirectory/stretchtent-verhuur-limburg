@@ -48,6 +48,69 @@ export type Database = {
         }
         Relationships: []
       }
+      footer_content: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string
+          email: string | null
+          id: string
+          phone: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description?: string
+          email?: string | null
+          id?: string
+          phone?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string
+          email?: string | null
+          id?: string
+          phone?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      footer_social_links: {
+        Row: {
+          created_at: string
+          custom_svg: string | null
+          display_order: number
+          icon_type: Database["public"]["Enums"]["social_media_icon_type"]
+          id: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          custom_svg?: string | null
+          display_order?: number
+          icon_type: Database["public"]["Enums"]["social_media_icon_type"]
+          id?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          custom_svg?: string | null
+          display_order?: number
+          icon_type?: Database["public"]["Enums"]["social_media_icon_type"]
+          id?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       home_page_content: {
         Row: {
           about_description: string
@@ -145,7 +208,7 @@ export type Database = {
           alt_text?: string | null
           created_at?: string
           filename: string
-          id: string
+          id?: string
           large_url?: string | null
           medium_url?: string | null
           original_url: string
@@ -326,67 +389,6 @@ export type Database = {
         }
         Relationships: []
       }
-      footer_content: {
-        Row: {
-          id: string;
-          title: string;
-          description: string;
-          phone: string | null;
-          email: string | null;
-          address: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          title?: string;
-          description?: string;
-          phone?: string | null;
-          email?: string | null;
-          address?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          title?: string;
-          description?: string;
-          phone?: string | null;
-          email?: string | null;
-          address?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
-      footer_social_links: {
-        Row: {
-          id: string;
-          icon_type: "facebook" | "instagram" | "twitter" | "linkedin" | "youtube" | "custom";
-          custom_svg: string | null;
-          url: string;
-          display_order: number;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          icon_type: "facebook" | "instagram" | "twitter" | "linkedin" | "youtube" | "custom";
-          custom_svg?: string | null;
-          url: string;
-          display_order?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          icon_type?: "facebook" | "instagram" | "twitter" | "linkedin" | "youtube" | "custom";
-          custom_svg?: string | null;
-          url?: string;
-          display_order?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
     }
     Views: {
       [_ in never]: never
@@ -413,6 +415,13 @@ export type Database = {
         | "sport"
         | "baby shower"
         | "verjaardag"
+      social_media_icon_type:
+        | "facebook"
+        | "instagram"
+        | "twitter"
+        | "linkedin"
+        | "youtube"
+        | "custom"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -429,7 +438,7 @@ export type Tables<
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never,
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
@@ -441,10 +450,10 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
-    : never
+        Row: infer R
+      }
+      ? R
+      : never
     : never
 
 export type TablesInsert<
