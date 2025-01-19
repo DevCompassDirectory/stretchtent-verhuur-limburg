@@ -5,6 +5,7 @@ import { Form } from "@/components/ui/form";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import type { HomePageContent } from "@/types/home";
+import { NavbarSection } from "./sections/NavbarSection";
 import { HeroSection } from "./sections/HeroSection";
 import { AboutSection } from "./sections/AboutSection";
 import { FeaturesSection } from "./sections/FeaturesSection";
@@ -52,6 +53,7 @@ export const HomePageForm = ({ initialContent }: HomePageFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <NavbarSection form={form} />
         <HeroSection form={form} />
         <AboutSection form={form} />
         <FeaturesSection form={form} />
