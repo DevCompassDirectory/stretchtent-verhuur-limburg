@@ -8,18 +8,29 @@ interface LegalPageEditorProps {
 }
 
 export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps) {
-  // Ensure we always have at least one empty paragraph block
+  // Default content for when initialContent is invalid or empty
   const defaultContent = [
     {
       type: "paragraph",
-      content: [],
+      content: [
+        {
+          type: "text",
+          text: "",
+        },
+      ],
     },
   ];
 
+  // Validate initialContent and ensure it's a valid array with at least one block
+  const validContent = Array.isArray(initialContent) && initialContent.length > 0 
+    ? initialContent.map(block => ({
+        ...block,
+        content: Array.isArray(block.content) ? block.content : [],
+      }))
+    : defaultContent;
+
   const editor: BlockNoteEditor = useBlockNote({
-    initialContent: Array.isArray(initialContent) && initialContent.length > 0 
-      ? initialContent 
-      : defaultContent,
+    initialContent: validContent,
   });
 
   return (
