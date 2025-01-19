@@ -6,13 +6,19 @@ interface ProjectWithImages extends Project {
   project_images: { image_url: string }[];
 }
 
+interface ProjectsResponse {
+  projects: ProjectWithImages[];
+  count: number;
+}
+
 const PROJECTS_PER_PAGE = 6;
 
 export const useProjects = () => {
-  return useInfiniteQuery({
+  return useInfiniteQuery<ProjectsResponse>({
     queryKey: ["projects"],
-    queryFn: async ({ pageParam = 0 }) => {
-      const from = pageParam * PROJECTS_PER_PAGE;
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const from = (pageParam as number) * PROJECTS_PER_PAGE;
       const to = from + PROJECTS_PER_PAGE - 1;
 
       const { data, error, count } = await supabase
