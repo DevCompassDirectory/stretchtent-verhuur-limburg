@@ -68,9 +68,6 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
     initialContent: initialContent && initialContent.length > 0 
       ? processContent(initialContent)
       : defaultContent,
-    onEditorContentChange: (editor) => {
-      onSave(editor.topLevelBlocks);
-    },
     sideMenu: false,
   });
 
@@ -79,6 +76,9 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
       <BlockNoteViewRaw
         editor={editor}
         theme="light"
+        onChange={() => {
+          onSave(editor.topLevelBlocks);
+        }}
       />
     </div>
   );
