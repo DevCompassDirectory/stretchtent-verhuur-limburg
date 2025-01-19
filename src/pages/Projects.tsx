@@ -1,9 +1,26 @@
+import { useEffect } from "react";
 import { ProjectCard } from "@/components/ProjectCard";
 import { useProjects } from "@/hooks/use-projects";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { useInView } from "react-intersection-observer";
 
 const Projects = () => {
-  const { data: projects, isLoading } = useProjects();
+  const { 
+    data, 
+    isLoading, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage 
+  } = useProjects();
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className="pt-24 pb-20">
@@ -26,23 +43,46 @@ const Projects = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects?.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                title={project.title}
-                description={project.description}
-                image={project.main_image}
-                date={new Date(project.date).toLocaleDateString('nl-NL', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
-                })}
-                category={project.category}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {data?.pages.map((page) =>
+                page.projects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    id={project.id}
+                    title={project.title}
+                    description={project.description}
+                    image={project.main_image}
+                    date={new Date(project.date).toLocaleDateString('nl-NL', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                    })}
+                    category={project.category}
+                  />
+                ))
+              )}
+            </div>
+            
+            <div 
+              ref={ref}
+              className="mt-12 text-center"
+            >
+              {isFetchingNextPage ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-10 w-40 mx-auto" />
+                </div>
+              ) : hasNextPage ? (
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => fetchNextPage()}
+                >
+                  Meer Projecten Laden
+                </Button>
+              ) : null}
+            </div>
+          </>
         )}
       </div>
     </div>

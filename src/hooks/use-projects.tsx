@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Project } from "@/types/project";
 
@@ -6,27 +6,41 @@ interface ProjectWithImages extends Project {
   project_images: { image_url: string }[];
 }
 
+const PROJECTS_PER_PAGE = 6;
+
 export const useProjects = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["projects"],
-    queryFn: async () => {
-      const { data, error } = await supabase
+    queryFn: async ({ pageParam = 0 }) => {
+      const from = pageParam * PROJECTS_PER_PAGE;
+      const to = from + PROJECTS_PER_PAGE - 1;
+
+      const { data, error, count } = await supabase
         .from("projects")
         .select(`
           *,
           project_images(*)
-        `)
-        .order("display_order", { ascending: true });
+        `, { count: 'exact' })
+        .order('display_order', { ascending: true })
+        .range(from, to);
 
       if (error) throw error;
       
       // Transform the data to match our type
       const projects = data.map((project): ProjectWithImages => ({
         ...project,
-        specs: project.specs as Project['specs'], // Cast the JSONB to our type
+        specs: project.specs as Project['specs'],
       }));
 
-      return projects;
+      return {
+        projects,
+        count: count || 0,
+      };
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      const totalPages = Math.ceil(lastPage.count / PROJECTS_PER_PAGE);
+      const nextPage = allPages.length;
+      return nextPage < totalPages ? nextPage : undefined;
     },
   });
 };
@@ -50,7 +64,7 @@ export const useProject = (id: string) => {
       // Transform the data to match our type
       const project: ProjectWithImages = {
         ...data,
-        specs: data.specs as Project['specs'], // Cast the JSONB to our type
+        specs: data.specs as Project['specs'],
       };
 
       return project;
