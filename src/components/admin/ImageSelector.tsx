@@ -9,14 +9,16 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
 interface ImageSelectorProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: string | string[];
+  onChange: (value: string | string[]) => void;
   onAltTextChange?: (altText: string) => void;
+  multiple?: boolean;
 }
 
-export const ImageSelector = ({ value, onChange, onAltTextChange }: ImageSelectorProps) => {
+export const ImageSelector = ({ value, onChange, onAltTextChange, multiple = false }: ImageSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [selectedImages, setSelectedImages] = useState<any[]>([]);
   const [selectedSize, setSelectedSize] = useState<string>("original");
 
   const { data: images, isLoading } = useQuery({
@@ -32,40 +34,76 @@ export const ImageSelector = ({ value, onChange, onAltTextChange }: ImageSelecto
   });
 
   const handleSelect = (image: any) => {
-    setSelectedImage(image);
-    setSelectedSize("original"); // Reset size selection when new image is selected
-    if (onAltTextChange && image.alt_text) {
-      onAltTextChange(image.alt_text);
+    if (multiple) {
+      const isSelected = selectedImages.some(img => img.id === image.id);
+      if (isSelected) {
+        setSelectedImages(selectedImages.filter(img => img.id !== image.id));
+      } else {
+        setSelectedImages([...selectedImages, image]);
+      }
+    } else {
+      setSelectedImage(image);
+      setSelectedSize("original");
+      if (onAltTextChange && image.alt_text) {
+        onAltTextChange(image.alt_text);
+      }
     }
   };
 
   const handleConfirm = () => {
-    if (!selectedImage) return;
+    if (multiple) {
+      if (selectedImages.length === 0) return;
+      const urls = selectedImages.map(image => image.original_url);
+      onChange(urls);
+    } else {
+      if (!selectedImage) return;
 
-    let selectedUrl = selectedImage.original_url;
-    if (selectedSize === "thumbnail" && selectedImage.thumbnail_url) {
-      selectedUrl = selectedImage.thumbnail_url;
-    } else if (selectedSize === "medium" && selectedImage.medium_url) {
-      selectedUrl = selectedImage.medium_url;
-    } else if (selectedSize === "large" && selectedImage.large_url) {
-      selectedUrl = selectedImage.large_url;
+      let selectedUrl = selectedImage.original_url;
+      if (selectedSize === "thumbnail" && selectedImage.thumbnail_url) {
+        selectedUrl = selectedImage.thumbnail_url;
+      } else if (selectedSize === "medium" && selectedImage.medium_url) {
+        selectedUrl = selectedImage.medium_url;
+      } else if (selectedSize === "large" && selectedImage.large_url) {
+        selectedUrl = selectedImage.large_url;
+      }
+
+      onChange(selectedUrl);
     }
-
-    onChange(selectedUrl);
     setIsOpen(false);
     setSelectedImage(null);
+    setSelectedImages([]);
     setSelectedSize("original");
+  };
+
+  const isImageSelected = (image: any) => {
+    if (multiple) {
+      return selectedImages.some(img => img.id === image.id);
+    }
+    return selectedImage?.id === image.id;
   };
 
   return (
     <div className="space-y-4">
-      {value && (
+      {value && !multiple && (
         <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
           <img
-            src={value}
+            src={value as string}
             alt="Selected image"
             className="h-full w-full object-cover"
           />
+        </div>
+      )}
+      {value && multiple && Array.isArray(value) && value.length > 0 && (
+        <div className="grid grid-cols-3 gap-4">
+          {value.map((url, index) => (
+            <div key={index} className="relative aspect-video overflow-hidden rounded-lg border">
+              <img
+                src={url}
+                alt={`Selected image ${index + 1}`}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ))}
         </div>
       )}
       <Button
@@ -75,13 +113,13 @@ export const ImageSelector = ({ value, onChange, onAltTextChange }: ImageSelecto
         onClick={() => setIsOpen(true)}
       >
         <Image className="mr-2 h-4 w-4" />
-        Choose Image
+        Choose Image{multiple ? 's' : ''}
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Select Image</DialogTitle>
+            <DialogTitle>Select Image{multiple ? 's' : ''}</DialogTitle>
           </DialogHeader>
           
           <div className="flex flex-col space-y-4 max-h-[80vh] overflow-hidden">
@@ -94,7 +132,7 @@ export const ImageSelector = ({ value, onChange, onAltTextChange }: ImageSelecto
                     <button
                       key={image.filename}
                       className={`relative aspect-video overflow-hidden rounded-lg border transition-all ${
-                        selectedImage?.id === image.id
+                        isImageSelected(image)
                           ? "border-primary ring-2 ring-primary ring-offset-2"
                           : "hover:border-primary"
                       }`}
@@ -111,7 +149,7 @@ export const ImageSelector = ({ value, onChange, onAltTextChange }: ImageSelecto
               </div>
             </ScrollArea>
 
-            {selectedImage && (
+            {!multiple && selectedImage && (
               <div className="border-t pt-4">
                 <div className="space-y-2">
                   <Label>Available Sizes</Label>
@@ -146,6 +184,13 @@ export const ImageSelector = ({ value, onChange, onAltTextChange }: ImageSelecto
                 </div>
                 <Button onClick={handleConfirm} className="w-full mt-4">
                   Confirm Selection
+                </Button>
+              </div>
+            )}
+            {multiple && (
+              <div className="border-t pt-4">
+                <Button onClick={handleConfirm} className="w-full">
+                  Confirm Selection ({selectedImages.length} selected)
                 </Button>
               </div>
             )}
