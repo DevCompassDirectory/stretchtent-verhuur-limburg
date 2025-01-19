@@ -19,4 +19,6 @@ export interface HomePageContent {
   og_title: string;
   og_description: string;
   og_image: string;
+  navbar_logo: string | null;
+  navbar_text: string | null;
 }
