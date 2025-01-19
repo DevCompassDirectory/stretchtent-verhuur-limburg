@@ -45,13 +45,12 @@ export const Navbar = () => {
             {/* Huren Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="flex items-center gap-1 -mx-4"
+                <button 
+                  className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"
                 >
                   Huren
                   <ChevronDown className="h-4 w-4" />
-                </Button>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
                 <DropdownMenuItem asChild>
