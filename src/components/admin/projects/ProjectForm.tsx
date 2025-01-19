@@ -1,38 +1,19 @@
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ImageSelector } from "@/components/admin/ImageSelector";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useProject } from "@/hooks/use-projects";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Database } from "@/integrations/supabase/types";
+import { BasicInfoFields } from "./form/BasicInfoFields";
+import { ImageFields } from "./form/ImageFields";
+import { SpecificationsFields } from "./form/SpecificationsFields";
 
 type ProjectCategory = Database["public"]["Enums"]["project_category"];
 
-interface ProjectFormProps {
-  projectId?: string | null;
-  onSuccess?: () => void;
-}
-
-interface ProjectFormValues {
+export interface ProjectFormValues {
   title: string;
   description: string;
   full_description: string;
@@ -48,16 +29,10 @@ interface ProjectFormValues {
   gallery: string[];
 }
 
-const categories: ProjectCategory[] = [
-  "bruiloft",
-  "zakelijk",
-  "feest",
-  "festival",
-  "communie",
-  "sport",
-  "baby shower",
-  "verjaardag",
-];
+interface ProjectFormProps {
+  projectId?: string | null;
+  onSuccess?: () => void;
+}
 
 export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
   const { toast } = useToast();
@@ -100,7 +75,6 @@ export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
   const onSubmit = async (values: ProjectFormValues) => {
     try {
       if (projectId) {
-        // Update existing project
         const { error: projectError } = await supabase
           .from("projects")
           .update({
@@ -116,7 +90,6 @@ export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
 
         if (projectError) throw projectError;
 
-        // Delete existing gallery images
         const { error: deleteError } = await supabase
           .from("project_images")
           .delete()
@@ -124,7 +97,6 @@ export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
 
         if (deleteError) throw deleteError;
 
-        // Insert new gallery images
         if (values.gallery.length > 0) {
           const { error: galleryError } = await supabase
             .from("project_images")
@@ -139,7 +111,6 @@ export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
           if (galleryError) throw galleryError;
         }
       } else {
-        // Create new project
         const { data: newProject, error: projectError } = await supabase
           .from("projects")
           .insert({
@@ -156,7 +127,6 @@ export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
 
         if (projectError || !newProject) throw projectError;
 
-        // Insert gallery images
         if (values.gallery.length > 0) {
           const { error: galleryError } = await supabase
             .from("project_images")
@@ -193,192 +163,9 @@ export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Titel</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Korte beschrijving</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="full_description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Volledige beschrijving</FormLabel>
-              <FormControl>
-                <Textarea {...field} className="min-h-[200px]" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Datum</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Categorie</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecteer een categorie" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem
-                        key={category}
-                        value={category}
-                        className="capitalize"
-                      >
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="main_image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Hoofdafbeelding</FormLabel>
-              <FormControl>
-                <ImageSelector
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="gallery"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Galerij</FormLabel>
-              <FormControl>
-                <ImageSelector
-                  value={field.value}
-                  onChange={field.onChange}
-                  multiple
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="space-y-4">
-          <h3 className="font-medium">Specificaties</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="specs.tentSize"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tent Afmeting</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="specs.capacity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Capaciteit</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="specs.setup"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Setup</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="specs.location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Locatie</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
+        <BasicInfoFields form={form} />
+        <ImageFields form={form} />
+        <SpecificationsFields form={form} />
         <div className="flex justify-end">
           <Button type="submit">
             {projectId ? "Project Bijwerken" : "Project Toevoegen"}

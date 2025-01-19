@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { ProjectForm } from "@/components/admin/projects/ProjectForm";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ProjectsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -26,18 +27,23 @@ export default function ProjectsPage() {
 
       <ProjectTable onEdit={setEditingProject} />
 
-      <Dialog open={isFormOpen || !!editingProject} onOpenChange={(open) => {
-        setIsFormOpen(open);
-        if (!open) setEditingProject(null);
-      }}>
-        <DialogContent className="max-w-2xl">
-          <ProjectForm 
-            projectId={editingProject} 
-            onSuccess={() => {
-              setIsFormOpen(false);
-              setEditingProject(null);
-            }} 
-          />
+      <Dialog 
+        open={isFormOpen || !!editingProject} 
+        onOpenChange={(open) => {
+          setIsFormOpen(open);
+          if (!open) setEditingProject(null);
+        }}
+      >
+        <DialogContent className="max-w-2xl max-h-[90vh]">
+          <ScrollArea className="h-full max-h-[calc(90vh-4rem)] pr-4">
+            <ProjectForm 
+              projectId={editingProject} 
+              onSuccess={() => {
+                setIsFormOpen(false);
+                setEditingProject(null);
+              }} 
+            />
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     </div>
