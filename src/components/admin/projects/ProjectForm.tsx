@@ -23,6 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Database } from "@/integrations/supabase/types";
+
+type ProjectCategory = Database["public"]["Enums"]["project_category"];
 
 interface ProjectFormProps {
   projectId?: string | null;
@@ -34,7 +37,7 @@ interface ProjectFormValues {
   description: string;
   full_description: string;
   date: string;
-  category: string;
+  category: ProjectCategory;
   main_image: string;
   specs: {
     tentSize: string;
@@ -45,7 +48,7 @@ interface ProjectFormValues {
   gallery: string[];
 }
 
-const categories = [
+const categories: ProjectCategory[] = [
   "bruiloft",
   "zakelijk",
   "feest",
@@ -54,7 +57,7 @@ const categories = [
   "sport",
   "baby shower",
   "verjaardag",
-] as const;
+];
 
 export function ProjectForm({ projectId, onSuccess }: ProjectFormProps) {
   const { toast } = useToast();
