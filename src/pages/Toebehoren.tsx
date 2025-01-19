@@ -8,9 +8,9 @@ const Accessories = () => {
     <div className="pt-24 pb-20">
       <div className="container max-w-4xl mx-auto px-4">
         <div className="text-center mb-16 fade-in">
-          <h1 className="text-4xl font-bold mb-4">Onze Accessoires</h1>
+          <h1 className="text-4xl font-bold mb-4">Onze Toebehoren</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Ontdek onze collectie premium accessoires voor de perfecte aanvulling op uw evenement
+            Ontdek onze collectie premium toebehoren voor de perfecte aanvulling op uw evenement
           </p>
         </div>
         {isLoading ? (
@@ -21,7 +21,7 @@ const Accessories = () => {
           </div>
         ) : error ? (
           <div className="text-center text-destructive">
-            Er is een fout opgetreden bij het laden van de accessoires.
+            Er is een fout opgetreden bij het laden van de toebehoren.
           </div>
         ) : (
           <div className="space-y-12">
