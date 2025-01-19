@@ -62,6 +62,14 @@ const ProjectDetail = () => {
   // Create allImages array from main_image and project_images
   const allImages = [project.main_image, ...project.project_images.map(img => img.image_url)];
 
+  // Transform project data to match the Project type
+  const transformedProject = {
+    ...project,
+    image: project.main_image,
+    fullDescription: project.full_description,
+    gallery: project.project_images.map(img => img.image_url)
+  };
+
   return (
     <div className="pt-24 pb-20">
       <div className="container mx-auto px-4">
@@ -74,28 +82,14 @@ const ProjectDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <ProjectGallery 
-            project={{
-              ...project,
-              image: project.main_image,
-              gallery: project.project_images.map(img => img.image_url),
-              fullDescription: project.full_description
-            }}
+            project={transformedProject}
             onImageClick={setSelectedImageIndex} 
           />
-          <ProjectInfo project={{
-            ...project,
-            image: project.main_image,
-            fullDescription: project.full_description
-          }} />
+          <ProjectInfo project={transformedProject} />
         </div>
 
         <ProjectImageCarousel
-          project={{
-            ...project,
-            image: project.main_image,
-            fullDescription: project.full_description,
-            gallery: project.project_images.map(img => img.image_url)
-          }}
+          project={transformedProject}
           selectedImageIndex={selectedImageIndex}
           onClose={() => setSelectedImageIndex(null)}
           allImages={allImages}
