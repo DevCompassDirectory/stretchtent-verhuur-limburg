@@ -68,7 +68,7 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
     initialContent: initialContent && initialContent.length > 0 
       ? processContent(initialContent)
       : defaultContent,
-    onChange: (editor) => {
+    onEditorContentChange: (editor) => {
       onSave(editor.topLevelBlocks);
     },
     sideMenu: false,
