@@ -1,5 +1,5 @@
 import { BlockNoteEditor } from "@blocknote/core";
-import { BlockNoteView, useBlockNote } from "@blocknote/react";
+import { BlockNoteViewRaw, useBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
 
 interface LegalPageEditorProps {
@@ -10,7 +10,7 @@ interface LegalPageEditorProps {
 export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps) {
   const editor: BlockNoteEditor = useBlockNote({
     initialContent,
-    onEditorContentChange: (editor) => {
+    onChange: (editor) => {
       const saveButton = document.querySelector(
         'button[type="submit"]'
       ) as HTMLButtonElement;
@@ -28,7 +28,7 @@ export function LegalPageEditor({ initialContent, onSave }: LegalPageEditorProps
         onSave(editor.topLevelBlocks);
       }}
     >
-      <BlockNoteView
+      <BlockNoteViewRaw
         editor={editor}
         theme="light"
         className="min-h-[500px] border rounded-md"

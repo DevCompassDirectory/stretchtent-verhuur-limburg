@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { LegalPageEditDialog } from "@/components/admin/legal/LegalPageEditDialog";
 import { ContentSection } from "@/components/admin/ContentSection";
+import { useForm } from "react-hook-form";
 
 export type LegalPage = {
   id: string;
@@ -24,6 +25,7 @@ export type LegalPage = {
 
 const LegalPagesPage = () => {
   const [selectedPage, setSelectedPage] = useState<LegalPage | null>(null);
+  const form = useForm();
 
   const { data: pages, isLoading } = useQuery({
     queryKey: ["legal-pages"],
@@ -47,7 +49,11 @@ const LegalPagesPage = () => {
   }
 
   return (
-    <ContentSection title="Legal Pages">
+    <ContentSection 
+      title="Legal Pages" 
+      fields={[]} 
+      form={form}
+    >
       <Table>
         <TableHeader>
           <TableRow>
