@@ -66,6 +66,8 @@ export type Database = {
           id: string
           meta_description: string
           meta_title: string
+          navbar_logo: string | null
+          navbar_text: string | null
           og_description: string
           og_image: string
           og_title: string
@@ -90,6 +92,8 @@ export type Database = {
           id?: string
           meta_description?: string
           meta_title?: string
+          navbar_logo?: string | null
+          navbar_text?: string | null
           og_description?: string
           og_image?: string
           og_title?: string
@@ -114,6 +118,8 @@ export type Database = {
           id?: string
           meta_description?: string
           meta_title?: string
+          navbar_logo?: string | null
+          navbar_text?: string | null
           og_description?: string
           og_image?: string
           og_title?: string
